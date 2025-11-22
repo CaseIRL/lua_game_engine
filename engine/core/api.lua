@@ -31,15 +31,31 @@
 --- @section Engine Modules
 
 local _loader = require("engine.core.loader")
+local _config = _loader.load_module("config")
 
 --- @section Module
 
 local api = {}
 
-api.draw = require("engine.core.draw")
-api.input = require("engine.core.input")
+-- Core modules
 api.scene = require("engine.core.scene")
 api.window = require("engine.core.window")
-api.audio = require("engine.core.audio")
+
+-- Optional modules
+if _config.modules.draw then
+    api.draw = require("engine.modules.draw")
+end
+
+if _config.modules.audio then
+    api.audio = require("engine.modules.audio")
+end
+
+if _config.modules.keyboard then
+    api.keyboard = require("engine.modules.keyboard")
+end
+
+if _config.modules.mouse then
+    api.mouse = require("engine.modules.mouse")
+end
 
 return api

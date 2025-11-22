@@ -62,10 +62,10 @@ function game:load()
 end
 
 function game:update(dt)
-    if engine.input.is_key_down("arrowright") then
+    if engine.keyboard.is_key_down("arrowright") then
         self.player_x = self.player_x + 200 * dt
     end
-    if engine.input.is_key_down("arrowleft") then
+    if engine.keyboard.is_key_down("arrowleft") then
         self.player_x = self.player_x - 200 * dt
     end
     
@@ -96,7 +96,7 @@ function title:draw()
 end
 
 function title:update(dt)
-    if engine.input.is_key_pressed("space") then
+    if engine.keyboard.is_pressed("space") then
         engine.scene.switch("game")
     end
 end
@@ -158,7 +158,7 @@ function title:load()
 end
 
 function title:update(dt)
-    if engine.input.is_key_pressed("space") then
+    if engine.keyboard.is_pressed("space") then
         engine.scene.switch("game")
     end
 end
@@ -197,21 +197,21 @@ end
 
 function game:update(dt)
     -- Player movement
-    if engine.input.is_key_down("arrowright") then
+    if engine.keyboard.is_key_down("arrowright") then
         self.player.x = self.player.x + self.player.speed * dt
     end
-    if engine.input.is_key_down("arrowleft") then
+    if engine.keyboard.is_key_down("arrowleft") then
         self.player.x = self.player.x - self.player.speed * dt
     end
-    if engine.input.is_key_down("arrowup") then
+    if engine.keyboard.is_key_down("arrowup") then
         self.player.y = self.player.y - self.player.speed * dt
     end
-    if engine.input.is_key_down("arrowdown") then
+    if engine.keyboard.is_key_down("arrowdown") then
         self.player.y = self.player.y + self.player.speed * dt
     end
     
     -- Back to title
-    if engine.input.is_key_pressed("escape") then
+    if engine.keyboard.is_pressed("escape") then
         engine.scene.switch("title")
     end
 end

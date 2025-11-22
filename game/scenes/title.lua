@@ -13,7 +13,7 @@ end
 
 function title:update(dt)
 
-    if engine.input.is_key_pressed("space") then
+    if engine.keyboard.is_pressed("space") then
         print("SWITCHING TO GAME")
         
         engine.scene.switch("game")

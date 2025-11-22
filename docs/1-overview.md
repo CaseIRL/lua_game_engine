@@ -31,7 +31,7 @@ end
 
 function my_scene:update(dt)
     -- Called every frame
-    if engine.input.is_key_pressed("escape") then
+    if engine.keyboard.is_pressed("escape") then
         engine.scene.switch("title")
     end
 end
@@ -64,7 +64,7 @@ Enough to draw, handle input, and manage windows.
 
 ## Minimal API
 
-You get: `window`, `input`, `draw`, `scene`.
+You get: `window`, `keyboard`, `mouse`, `draw`, `scene`, `audio`.
 You don't get: features you never asked for, endless functions with no purpose, or anything that slows you down.
 
 # Why Bother?

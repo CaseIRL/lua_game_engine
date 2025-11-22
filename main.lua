@@ -39,7 +39,7 @@ local _api = _engine.api or false
 
 --- @section Sandbox
 
-local _config = _engine.loader.load_module("game.config")
+local _config = _engine.loader.load_module("config")
 
 _engine.window.init(_config)
 

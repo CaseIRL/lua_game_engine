@@ -9,10 +9,13 @@ How the framework is structured and how everything fits together.
   /core/
     api.lua             -- Public API exposed to game code
     loader.lua          -- Safe module loader with FFI sandboxing
-    draw.lua            -- 2D drawing (Raylib via FFI)
-    input.lua           -- Input handling (Raylib via FFI)
     scene.lua           -- Scene management and switching
     window.lua          -- Window initialization and management
+  /modules/
+    audio.lua           -- Playing sounds (Ralib via FFI)
+    draw.lua            -- 2D drawing (Raylib via FFI)
+    mouse.lua           -- Mouse handling (Raylib via FFI)
+    keyboard.lua        -- Keyboard handling (Raylib via FFI)
   /scenes/
     default.lua         -- Fallback scene if none found
   init.lua              -- Engine entry point, loads all modules
@@ -33,8 +36,10 @@ main.lua                -- Entry point (never edit this)
 Exports the public API that game code can access.
 
 Contains:
+- `engine.audio` - Audio handling
 - `engine.draw` - Drawing functions
-- `engine.input` - Input handling
+- `engine.keyboard` - Keyboard handling
+- `engine.mouse` - mouse handling
 - `engine.scene` - Scene management
 - `engine.window` - Window handling
 
@@ -71,17 +76,32 @@ All handle FFI calls internally.
 
 ---
 
-## input.lua
+## Inputs
 
-Raylib input handling exposed safely.
+Keyboard and mouse input handling.
 
-Functions:
-- `input.is_key_pressed(key)` - Key pressed this frame
-- `input.is_key_down(key)` - Key held
-- `input.get_mouse_pos()` - Mouse position
-- `input.is_mouse_pressed(button)` - Mouse button pressed
+### Keyboard
+```lua
+engine.keyboard.is_down(key)       -- Key currently held down
+engine.keyboard.is_pressed(key)    -- Key pressed this frame (one-time trigger)
+```
 
-Maps string key names to key codes automatically.
+**Key names:** `a-z`, `0-9`, `space`, `enter`, `escape`, `tab`, `arrowup`, `arrowdown`, `arrowleft`, `arrowright`, `shift`, `ctrl`, `alt`, `f1-f12`, `home`, `end`, `pageup`, `pagedown`, `insert`, `delete`
+
+### Mouse
+```lua
+engine.mouse.get_pos()             -- Returns: x, y (current position)
+engine.mouse.get_delta()           -- Returns: dx, dy (movement since last frame)
+engine.mouse.is_pressed(button)    -- Mouse button pressed this frame
+engine.mouse.is_down(button)       -- Mouse button currently held
+engine.mouse.set_pos(x, y)         -- Set cursor position
+engine.mouse.show()                -- Show cursor
+engine.mouse.hide()                -- Hide cursor
+engine.mouse.lock()                -- Lock cursor (disable movement)
+engine.mouse.unlock()              -- Unlock cursor
+```
+
+**Mouse buttons:** `0` = left, `1` = right, `2` = middle
 
 ---
 
@@ -117,7 +137,7 @@ Game code in `/game/` runs in a restricted environment created by `loader.lua`.
 ## What Game Code Can Access
 
 ```lua
-engine            -- Public API (draw, input, scene, window)
+engine            -- Public API (draw, keyboard, mouse, audio, scene, window)
 math              -- Standard Lua math library
 string            -- Standard Lua string library
 table             -- Standard Lua table library

@@ -28,17 +28,37 @@
 --- @module engine.init
 --- @description Single entry point for core engine modules.
 
+--- @section Engine Modules
+
+local _loader = require("engine.core.loader")
+local _config = _loader.load_module("config")
+
 --- @section Module
 
 local engine = {}
 
+-- Core modules
 engine.window = require("engine.core.window")
-engine.loader = require("engine.core.loader")
+engine.loader = _loader
 engine.scene = require("engine.core.scene")
-engine.input = require("engine.core.input")
-engine.draw = require("engine.core.draw")
 engine.api = require("engine.core.api")
-engine.audio = require("engine.core.audio")
+
+-- Optional modules
+if _config.modules.draw then
+    engine.draw = require("engine.modules.draw")
+end
+
+if _config.modules.audio then
+    engine.audio = require("engine.modules.audio")
+end
+
+if _config.modules.keyboard then
+    engine.keyboard = require("engine.modules.keyboard")
+end
+
+if _config.modules.mouse then
+    engine.mouse = require("engine.modules.mouse")
+end
 
 return engine
 

@@ -24,21 +24,27 @@ engine.draw.text({ text, x, y, size?, r?, g?, b?, a? })                     -- D
 
 # Input
 
+## Keyboard
 ```lua
-engine.input.is_key_down(key)              -- Key held down
-engine.input.is_key_pressed(key)           -- Key pressed this frame
-engine.input.is_mouse_down(button)         -- Mouse button held (0=left, 1=right, 2=middle)
-engine.input.is_mouse_pressed(button)      -- Mouse button pressed this frame
-engine.input.get_mouse_pos()               -- Returns: x, y
-engine.input.get_mouse_delta()             -- Returns: dx, dy
-engine.input.set_mouse_pos(x, y)           -- Set cursor position
-engine.input.show_cursor()                 -- Show cursor
-engine.input.hide_cursor()                 -- Hide cursor
-engine.input.lock_cursor()                 -- Disable cursor movement
-engine.input.unlock_cursor()               -- Enable cursor movement
+engine.keyboard.is_down(key)           -- Key held down
+engine.keyboard.is_pressed(key)        -- Key pressed this frame
+```
+
+## Mouse
+```lua
+engine.mouse.is_down(button)           -- Mouse button held (0=left, 1=right, 2=middle)
+engine.mouse.is_pressed(button)        -- Mouse button pressed this frame
+engine.mouse.get_pos()                 -- Returns: x, y
+engine.mouse.get_delta()               -- Returns: dx, dy
+engine.mouse.set_pos(x, y)             -- Set cursor position
+engine.mouse.show()                    -- Show cursor
+engine.mouse.hide()                    -- Hide cursor
+engine.mouse.lock()                    -- Disable cursor movement
+engine.mouse.unlock()                  -- Enable cursor movement
 ```
 
 **Key names:** `a-z`, `0-9`, `space`, `enter`, `escape`, `tab`, `arrowup`, `arrowdown`, `arrowleft`, `arrowright`, `shift`, `ctrl`, `alt`, `f1-f12`, etc.
+**Mouse buttons:** `0` = left, `1` = right, `2` = middle
 
 # Audio
 ```lua

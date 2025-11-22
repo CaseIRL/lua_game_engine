@@ -33,7 +33,7 @@ end
 
 function my_scene:update(dt)
     -- Called every frame
-    if engine.input.is_key_pressed("escape") then
+    if engine.keyboard.is_pressed("escape") then
         engine.scene.switch("title")
     end
 end
@@ -121,7 +121,7 @@ function title:draw()
 end
 
 function title:update(dt)
-    if engine.input.is_key_pressed("space") then
+    if engine.keyboard.is_pressed("space") then
         engine.scene.switch("game")
     end
 end

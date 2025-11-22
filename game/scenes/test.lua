@@ -18,13 +18,13 @@ function test:load()
 end
 
 function test:update(dt)
-    if engine.input.is_key_pressed("space") then
+    if engine.keyboard.is_pressed("space") then
         
         engine.audio.play_music("horde_drums")
         print("Done")
     end
     
-    if engine.input.is_key_pressed("backspace") then
+    if engine.keyboard.is_pressed("backspace") then
         engine.audio.stop_music()
         engine.scene.switch("title")
     end

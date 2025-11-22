@@ -9,7 +9,7 @@ function game:load()
 end
 
 function game:update(dt)
-    if engine.input.is_key_pressed("backspace") then
+    if engine.keyboard.is_pressed("backspace") then
         print("SWITCHING TO TITLE")
         engine.scene.switch("title")
     end
