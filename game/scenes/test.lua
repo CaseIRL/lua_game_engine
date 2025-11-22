@@ -13,12 +13,19 @@ if test_module then
 end
 
 function test:load()
-    print("Test scene loaded") 
+    print("Test scene loaded")
+    engine.audio.load_music("horde_drums", "game/assets/audio/music/horde_drums.ogg")
 end
 
 function test:update(dt)
+    if engine.input.is_key_pressed("space") then
+        
+        engine.audio.play_music("horde_drums")
+        print("Done")
+    end
+    
     if engine.input.is_key_pressed("backspace") then
-        print("SWITCHING TO TITLE")
+        engine.audio.stop_music()
         engine.scene.switch("title")
     end
 end
@@ -56,6 +63,7 @@ end
 
 function test:unload()
     print("Test scene unloaded")
+    engine.audio.unload_music("horde_drums")
 end
 
 return test

@@ -40,5 +40,6 @@ api.draw = require("engine.core.draw")
 api.input = require("engine.core.input")
 api.scene = require("engine.core.scene")
 api.window = require("engine.core.window")
+api.audio = require("engine.core.audio")
 
 return api

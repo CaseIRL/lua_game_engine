@@ -38,6 +38,7 @@ engine.scene = require("engine.core.scene")
 engine.input = require("engine.core.input")
 engine.draw = require("engine.core.draw")
 engine.api = require("engine.core.api")
+engine.audio = require("engine.core.audio")
 
 return engine
 

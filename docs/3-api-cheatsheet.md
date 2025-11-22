@@ -40,6 +40,29 @@ engine.input.unlock_cursor()               -- Enable cursor movement
 
 **Key names:** `a-z`, `0-9`, `space`, `enter`, `escape`, `tab`, `arrowup`, `arrowdown`, `arrowleft`, `arrowright`, `shift`, `ctrl`, `alt`, `f1-f12`, etc.
 
+# Audio
+```lua
+engine.audio.load_sound(key, path)              -- Load sound effect from file
+engine.audio.load_music(key, path)              -- Load music from file
+engine.audio.play_sound(key)                    -- Play sound effect
+engine.audio.play_music(key, loop?)             -- Play music (loop defaults to false)
+engine.audio.stop_music()                       -- Stop current music
+engine.audio.pause_music()                      -- Pause current music
+engine.audio.resume_music()                     -- Resume paused music
+engine.audio.set_sound_volume(key, volume)      -- Set sound volume (0.0-1.0)
+engine.audio.set_sound_pitch(key, pitch)        -- Set sound pitch (1.0 = normal, 0.5 = half speed, 2.0 = double)
+engine.audio.set_music_volume(key, volume)      -- Set music volume (0.0-1.0)
+engine.audio.set_music_pitch(key, pitch)        -- Set music pitch (1.0 = normal)
+engine.audio.is_music_playing()                 -- Returns: true if music playing
+engine.audio.unload_sound(key)                  -- Unload sound effect
+engine.audio.unload_music(key)                  -- Unload music
+engine.audio.cleanup()                          -- Clean up all audio resources
+```
+
+**Audio support:** WAV, OGG (MP3 support depends on Raylib build)
+**Volume range:** 0.0 (silent) to 1.0 (full volume)
+**Pitch range:** 0.5 (half speed) to 2.0+ (variable speed)
+
 # Scenes
 
 ```lua
