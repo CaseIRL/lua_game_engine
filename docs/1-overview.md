@@ -113,6 +113,6 @@ Support Hours: *Whenever I'm awake and not dealing with real life.*
 
 # Next Steps
 
-- `/docs/2-architecture.md` - How everything fits together
-- `/docs/3-api-cheatsheet.md` - Complete API reference
-- `/docs/4-creating-scenes.md` - Scene patterns & examples
+- [architecture doc](/docs/2-architecture.md) - How everything fits together
+- [api doc](/docs/3-api-cheatsheet.md) - Complete API reference
+- [creating scenes doc](/docs/4-creating-scenes.md) - Scene patterns & examples
