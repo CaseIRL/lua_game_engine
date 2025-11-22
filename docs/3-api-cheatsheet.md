@@ -76,4 +76,4 @@ engine.window.toggle_fullscreen()   -- Toggle fullscreen
 
 # Next Steps
 
-- `/docs/4-creating-scenes.md` - Scene patterns & examples
+- [creating scenes doc](/docs/4-creating-scenes.md) - Scene patterns & examples
