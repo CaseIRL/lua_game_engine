@@ -189,5 +189,5 @@ The sandbox automatically grants access to anything exported in `api.lua`.
 
 # Next Steps
 
-- `/docs/3-api-cheatsheet.md` - Complete API reference
-- `/docs/4-creating-scenes.md` - Scene patterns & examples
+- [api doc](/docs/3-api-cheatsheet.md) - Complete API reference
+- [creating scenes doc](/docs/4-creating-scenes.md) - Scene patterns & examples
