@@ -67,7 +67,7 @@ Enough to draw, handle input, and manage windows.
 
 ## Minimal API
 
-You get: `window`, `audio`, `keyboard`, `mouse`, `actions`, `image`, `draw`, `scene`.
+You get pretty much just what you need.
 You don't get: features you never asked for, endless functions with no purpose, or anything that slows you down.
 
 ## Prerequisites

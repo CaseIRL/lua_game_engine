@@ -45,6 +45,8 @@ local function create_sandbox_env(api)
         table = table,
         ipairs = ipairs,
         pairs = pairs,
+        tostring = tostring,
+        tonumber = tonumber,
         type = type,
         pcall = pcall,
         xpcall = xpcall,

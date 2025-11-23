@@ -66,4 +66,8 @@ if _config.modules.actions then
     api.actions = require("engine.modules.actions")
 end
 
+if _config.modules.collision then
+    api.collision = require("engine.modules.collision")
+end
+
 return api

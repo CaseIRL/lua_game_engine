@@ -12,8 +12,11 @@ How the framework is structured and how everything fits together.
     scene.lua           -- Scene management and switching
     window.lua          -- Window initialization and management
   /modules/
+    actions.lua         -- Action mapping for repeat controls
     audio.lua           -- Playing sounds (Ralib via FFI)
+    collision.lua       -- Basic collision handling
     draw.lua            -- 2D drawing (Raylib via FFI)
+    image.lua           -- Image and sprite handling
     mouse.lua           -- Mouse handling (Raylib via FFI)
     keyboard.lua        -- Keyboard handling (Raylib via FFI)
   /scenes/
@@ -45,6 +48,7 @@ Contains:
 - `engine.window` - Window handling
 - `engine.image` - Image and sprite handling
 - `engine.actions` - Action mapping for controls
+- `engine.collision` - Basic collision functions nothing impressive
 
 Only this API is available to sandboxed game code.
 
@@ -60,79 +64,6 @@ Handles:
 - Creating restricted environments for game code
 - Enforcing sandbox restrictions
 
----
-
-## draw.lua
-
-Raylib drawing functions exposed safely.
-
-Functions:
-- `draw.rect(opts)` - Draw rectangle
-- `draw.text(opts)` - Draw text
-- `draw.line(opts)` - Draw line
-- `draw.circle(opts)` - Draw circle
-- `draw.triangle(opts)` - Draw triangle
-- And more...
-
-All take option tables. 
-All handle FFI calls internally.
-
----
-
-## Inputs
-
-Keyboard and mouse input handling.
-
-### Keyboard
-```lua
-engine.keyboard.is_down(key)       -- Key currently held down
-engine.keyboard.is_pressed(key)    -- Key pressed this frame (one-time trigger)
-```
-
-**Key names:** `a-z`, `0-9`, `space`, `enter`, `escape`, `tab`, `arrowup`, `arrowdown`, `arrowleft`, `arrowright`, `shift`, `ctrl`, `alt`, `f1-f12`, `home`, `end`, `pageup`, `pagedown`, `insert`, `delete`
-
-### Mouse
-```lua
-engine.mouse.get_pos()             -- Returns: x, y (current position)
-engine.mouse.get_delta()           -- Returns: dx, dy (movement since last frame)
-engine.mouse.is_pressed(button)    -- Mouse button pressed this frame
-engine.mouse.is_down(button)       -- Mouse button currently held
-engine.mouse.set_pos(x, y)         -- Set cursor position
-engine.mouse.show()                -- Show cursor
-engine.mouse.hide()                -- Hide cursor
-engine.mouse.lock()                -- Lock cursor (disable movement)
-engine.mouse.unlock()              -- Unlock cursor
-```
-
-**Mouse buttons:** `0` = left, `1` = right, `2` = middle
-
----
-
-## scene.lua
-
-Manages scene lifecycle and switching.
-
-Functions:
-- `scene.load(scene_obj)` - Load a scene, unload current one
-- `scene.switch(scene_name)` - Switch to named scene
-- `scene.update(dt)` - Update current scene
-- `scene.draw()` - Draw current scene
-- `scene.set_scenes(table)` - Register available scenes
-
-Calls scene methods: `load()`, `update(dt)`, `draw()`, `unload()`.
-
----
-
-## window.lua
-
-Raylib window management.
-
-Handles:
-- Initializing the window
-- Managing FPS/timing
-- Providing window size queries
-- Cleanup on exit
-
 # The Sandbox
 
 Game code in `/game/` runs in a restricted environment created by `loader.lua`.
@@ -140,15 +71,16 @@ Game code in `/game/` runs in a restricted environment created by `loader.lua`.
 ## What Game Code Can Access
 
 ```lua
-engine            -- Public API (draw, keyboard, mouse, audio, scene, window)
-math              -- Standard Lua math library
-string            -- Standard Lua string library
-table             -- Standard Lua table library
-ipairs, pairs     -- Table iteration
-type              -- Type checking
-pcall, xpcall     -- Error handling
-print()           -- Debug output
-require()         -- Safe version to load other game files (game folder only)
+engine              -- Public API (draw, keyboard, mouse, audio, scene, window)
+math                -- Standard Lua math library
+string              -- Standard Lua string library
+table               -- Standard Lua table library
+tostring, tonumber  -- String & number handling
+ipairs, pairs       -- Table iteration
+type                -- Type checking
+pcall, xpcall       -- Error handling
+print()             -- Debug output
+require()           -- Safe version to load other game files (game folder only)
 ```
 
 ---

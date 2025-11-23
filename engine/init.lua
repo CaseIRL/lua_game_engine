@@ -68,5 +68,9 @@ if _config.modules.actions then
     engine.actions = require("engine.modules.actions")
 end
 
+if _config.modules.collision then
+    engine.collision = require("engine.modules.collision")
+end
+
 return engine
 

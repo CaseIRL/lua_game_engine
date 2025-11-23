@@ -56,6 +56,7 @@ return {
         keyboard = true, -- Enables `keyboard` input functions
         mouse = true, -- Enables `mouse` input functions
         actions = true, -- Enables `action` mapping functions
+        collision = true, -- Enables `collision` functions; these are basic if need more details add a physics library
     },
 
     --- @section Game Scenes
@@ -69,6 +70,7 @@ return {
         test_draw = "test/scenes/test_draw",
         test_audio = "test/scenes/test_audio",
         test_image = "test/scenes/test_image",
-        test_actions = "test/scenes/test_actions"
+        test_actions = "test/scenes/test_actions",
+        test_collision = "test/scenes/test_collision"
     }
 }
