@@ -60,5 +60,9 @@ if _config.modules.mouse then
     engine.mouse = require("engine.modules.mouse")
 end
 
+if _config.modules.image then
+    engine.image = require("engine.modules.image")
+end
+
 return engine
 

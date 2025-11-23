@@ -51,9 +51,10 @@ return {
 
     modules = {
         audio = true, -- Enables raylibs InitAudioDevice()
-        draw = true, -- Enables engine `draw` functions
-        keyboard = true, -- Enables keyboard input
-        mouse = true, -- Enables mouse input
+        draw = true, -- Enables `draw` functions
+        image = true, -- Enables `image` functions
+        keyboard = true, -- Enables `keyboard` input functions
+        mouse = true, -- Enables `mouse` input functions
     },
 
     --- @section Game Scenes

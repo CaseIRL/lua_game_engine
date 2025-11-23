@@ -58,4 +58,8 @@ if _config.modules.mouse then
     api.mouse = require("engine.modules.mouse")
 end
 
+if _config.modules.image then
+    api.image = require("engine.modules.image")
+end
+
 return api
