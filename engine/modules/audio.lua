@@ -25,7 +25,7 @@
     SOFTWARE.
 ]]
 
---- @module engine.core.audio
+--- @module engine.modules.audio
 --- @description Handles audio playback.
 
 --- @section FFI

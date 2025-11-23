@@ -1,7 +1,8 @@
 # Engine API Cheatsheet
 
 Quick reference for the framework, refer back to this for help. 
-Access modules via `local engine = require("engine.api")`.
+Engine modules are loaded into game files through sandbox.
+They all have access to any modules enabled within the `config.lua`
 
 # Drawing
 
@@ -21,6 +22,24 @@ engine.draw.text({ text, x, y, size?, r?, g?, b?, a? })                     -- D
 
 **Colour defaults:** r=255, g=255, b=255, a=255 (white)
 **Other defaults:** radius=10, size=16, sides=6, rotation=0, rx=20, ry=20
+
+# Images
+```lua
+engine.image.load({ type, key, path, frame_width?, frame_height?, animations? })                -- Load image or sprite
+engine.image.draw({ key, x, y, scale?, tint? })                                                 -- Draw image
+engine.image.draw_sprite({ key, anim, frame, x, y, scale? })                                    -- Draw sprite with animation
+engine.image.draw_frame({ key, x, y, frame_width, frame_height, frame_x, frame_y, scale? })     -- Draw specific frame
+engine.image.unload(key)                                                                        -- Unload image
+engine.image.cleanup()                                                                          -- Unload all images
+```
+
+Image load options:
+- type: "image" or "sprite"
+- key: Unique identifier
+- path: File path to image/spritesheet
+- animations: Table of { name = { x, y, frames }, ... } for sprites
+
+**Draw defaults:** scale = 1.0, tint = white (optional)
 
 # Input
 
@@ -45,6 +64,19 @@ engine.mouse.unlock()                  -- Enable cursor movement
 
 **Key names:** `a-z`, `0-9`, `space`, `enter`, `escape`, `tab`, `arrowup`, `arrowdown`, `arrowleft`, `arrowright`, `shift`, `ctrl`, `alt`, `f1-f12`, etc.
 **Mouse buttons:** `0` = left, `1` = right, `2` = middle
+
+## Action mapping:
+```lua
+engine.actions.map_action(name, bindings)      -- Register action with key/mouse bindings
+engine.actions.is_action_pressed(name)         -- Action triggered this frame
+engine.actions.is_action_down(name)            -- Action held down
+engine.actions.clear_actions()                 -- Unregister all actions
+```
+
+**Binding formats:**
+- Keyboard: `"a"`, `"space"`, `"arrowup"`, etc. (same as keyboard module)
+- Mouse: `{ mouse_button = 0 }` (0=left, 1=right, 2=middle)
+- Multiple bindings: `{"a", "arrowleft", { mouse_button = 0 }}`
 
 # Audio
 ```lua

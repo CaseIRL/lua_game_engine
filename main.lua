@@ -45,7 +45,7 @@ _engine.window.init(_config)
 
 local sandboxed_scenes = {}
 for name, path in pairs(_config.scenes) do
-    sandboxed_scenes[name] = _engine.loader.load_module("game.scenes." .. path, _api)
+    sandboxed_scenes[name] = _engine.loader.load_module("game." .. path, _api)
 end
 
 --- @section Scenes

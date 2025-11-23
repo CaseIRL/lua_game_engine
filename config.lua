@@ -55,13 +55,20 @@ return {
         image = true, -- Enables `image` functions
         keyboard = true, -- Enables `keyboard` input functions
         mouse = true, -- Enables `mouse` input functions
+        actions = true, -- Enables `action` mapping functions
     },
 
     --- @section Game Scenes
 
-    scenes = { -- @todo change this setup
-        test = "test",
-        title = "title",
-        game = "game"
+    scenes = {
+        -- Game scenes
+        title = "scenes/title",
+        game = "scenes/game",
+        
+        -- Test scenes
+        test_draw = "test/scenes/test_draw",
+        test_audio = "test/scenes/test_audio",
+        test_image = "test/scenes/test_image",
+        test_actions = "test/scenes/test_actions"
     }
 }

@@ -24,6 +24,7 @@ How the framework is structured and how everything fits together.
   /scenes/
     title.lua           -- Scene module
     game.lua            -- Scene module
+  /test/                -- Used for testing things remove it  
   config.lua            -- Game configuration (window size, scenes, etc)
 
 main.lua                -- Entry point (never edit this)
@@ -42,6 +43,8 @@ Contains:
 - `engine.mouse` - mouse handling
 - `engine.scene` - Scene management
 - `engine.window` - Window handling
+- `engine.image` - Image and sprite handling
+- `engine.actions` - Action mapping for controls
 
 Only this API is available to sandboxed game code.
 

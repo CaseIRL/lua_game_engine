@@ -64,5 +64,9 @@ if _config.modules.image then
     engine.image = require("engine.modules.image")
 end
 
+if _config.modules.actions then
+    engine.actions = require("engine.modules.actions")
+end
+
 return engine
 

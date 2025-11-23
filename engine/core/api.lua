@@ -62,4 +62,8 @@ if _config.modules.image then
     api.image = require("engine.modules.image")
 end
 
+if _config.modules.actions then
+    api.actions = require("engine.modules.actions")
+end
+
 return api
