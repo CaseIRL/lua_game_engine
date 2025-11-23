@@ -61,6 +61,8 @@ return {
 
     --- @section Game Scenes
 
+    default_scene = "test_image", -- Specify the default scene game should load; required for .exe.
+
     scenes = {
         -- Game scenes
         title = "scenes/title",

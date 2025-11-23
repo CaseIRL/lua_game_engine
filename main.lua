@@ -28,27 +28,23 @@
 --- @script main
 --- @description Main engine entry point; `luajit.exe main.lua scene?` to launch engine, will use default scene if none declared / exist.
 
---- @section Command Line Args
-
-local scene_type = arg[1] or "test"
-
 --- @section Engine
 
 local _engine = require("engine.init")
 local _api = _engine.api or false
 
---- @section Sandbox
+--- @section Preload
 
 local _config = _engine.loader.load_module("config")
 
-_engine.window.init(_config)
+local scene_type = arg[1] or _config.default_scene or "test"
 
 local sandboxed_scenes = {}
 for name, path in pairs(_config.scenes) do
     sandboxed_scenes[name] = _engine.loader.load_module("game." .. path, _api)
 end
 
---- @section Scenes
+_engine.window.init(_config)
 
 local scene = sandboxed_scenes[scene_type] or _engine.loader.load_module("engine.scenes.default", _api)
 

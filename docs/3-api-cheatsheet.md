@@ -65,7 +65,7 @@ engine.mouse.unlock()                  -- Enable cursor movement
 **Key names:** `a-z`, `0-9`, `space`, `enter`, `escape`, `tab`, `arrowup`, `arrowdown`, `arrowleft`, `arrowright`, `shift`, `ctrl`, `alt`, `f1-f12`, etc.
 **Mouse buttons:** `0` = left, `1` = right, `2` = middle
 
-## Action mapping:
+## Action mapping
 ```lua
 engine.actions.map_action(name, bindings)      -- Register action with key/mouse bindings
 engine.actions.is_action_pressed(name)         -- Action triggered this frame
@@ -77,6 +77,20 @@ engine.actions.clear_actions()                 -- Unregister all actions
 - Keyboard: `"a"`, `"space"`, `"arrowup"`, etc. (same as keyboard module)
 - Mouse: `{ mouse_button = 0 }` (0=left, 1=right, 2=middle)
 - Multiple bindings: `{"a", "arrowleft", { mouse_button = 0 }}`
+
+# Collision
+
+```lua
+engine.collision.point_in_rect({ point, rect })                    -- Is point inside rectangle?
+engine.collision.point_in_circle({ point, center, radius })       -- Is point inside circle?
+engine.collision.rects_overlap({ rect1, rect2 })                  -- Do two rectangles overlap?
+engine.collision.circles_overlap({ c1_center, c1_radius, c2_center, c2_radius }) -- Do two circles overlap?
+engine.collision.distance_between({ p1, p2 })                     -- Distance between two points
+```
+
+**Point format:** `{ x, y }`
+**Rect format:** `{ x, y, width, height }`
+**Circle format:** center `{ x, y }` and `radius`
 
 # Audio
 ```lua
