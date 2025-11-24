@@ -63,13 +63,7 @@ function test_ui:draw()
     local status_size = 18
     local status_x = (w / 2) - (#status_text * status_size * 0.225)
     
-    engine.draw.text({ 
-        text = status_text, 
-        x = status_x, 
-        y = text_y, 
-        size = status_size, 
-        colour = text_primary 
-    })
+    engine.draw.text({ text = status_text, x = status_x, y = text_y, size = status_size, colour = text_primary })
 end
 
 function test_ui:unload()

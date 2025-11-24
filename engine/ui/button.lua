@@ -63,7 +63,7 @@ function button:is_hovered(mouse_x, mouse_y)
     return mouse_x >= self.x and mouse_x <= self.x + self.w and mouse_y >= self.y and mouse_y <= self.y + self.h
 end
 
---- Update button state (call this each frame with mouse position)
+--- Update button state
 --- @param mouse_x number
 --- @param mouse_y number
 --- @param mouse_pressed boolean
@@ -101,46 +101,21 @@ function button:draw()
     else
         bg_color = _style.get("bg_panel")
     end
-    
-    -- Draw button background - UPDATED
-    _draw.rect({ 
-        x = self.x, 
-        y = self.y, 
-        w = self.w, 
-        h = self.h, 
-        color = bg_color 
-    })
-    
-    -- Draw border - UPDATED (Border style returns a struct { color={}, thickness=X })
+
+    _draw.rect({ x = self.x, y = self.y, w = self.w, h = self.h, color = bg_color })
+
     local border = _style.get("border_accent")
-    _draw.rect_lines({ 
-        x = self.x, 
-        y = self.y, 
-        w = self.w, 
-        h = self.h, 
-        color = border.color 
-    })
-    
-    -- Draw text (centered)
+    _draw.rect_lines({ x = self.x, y = self.y, w = self.w, h = self.h, color = border.color })
+
     if self.text then
         local text_color = self.enabled and _style.get("text_primary") or _style.get("text_tertiary")
         local font_size = 16
-        
-        -- Rough centering
+
         local text_x = self.x + (self.w / 2) - (#self.text * font_size / 4)
         local text_y = self.y + (self.h / 2) - (font_size / 2)
-        
-        -- Draw text - UPDATED
-        _draw.text({ 
-            text = self.text, 
-            x = text_x, 
-            y = text_y, 
-            size = font_size, 
-            color = text_color 
-        })
+
+        _draw.text({ text = self.text, x = text_x, y = text_y, size = font_size, color = text_color })
     end
 end
-
--- Removed clear_background since that helper belongs in the scene/view module.
 
 return button
