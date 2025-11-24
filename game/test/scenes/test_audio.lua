@@ -6,6 +6,11 @@ local test_audio = {}
 
 function test_audio:load()
     print("Audio test scene loaded")
+    
+    local w, h = engine.window.get_size()
+    self.center_x = w / 2
+    self.theme = engine.ui.style.get_theme() 
+
     engine.audio.load_music("horde_drums", "game/test/audio/horde_drums.ogg")
 end
 
@@ -37,16 +42,27 @@ function test_audio:update(dt)
 end
 
 function test_audio:draw()
-    engine.draw.text({ text = "AUDIO TEST", x = 100, y = 100, size = 20, r = 255, g = 255, b = 255 })
-    engine.draw.text({ text = "SPACE - Play", x = 100, y = 150, size = 16, r = 200, g = 200, b = 200 })
-    engine.draw.text({ text = "P - Pause", x = 100, y = 180, size = 16, r = 200, g = 200, b = 200 })
-    engine.draw.text({ text = "R - Resume", x = 100, y = 210, size = 16, r = 200, g = 200, b = 200 })
-    engine.draw.text({ text = "S - Stop", x = 100, y = 240, size = 16, r = 200, g = 200, b = 200 })
-    engine.draw.text({ text = "ESC - Return", x = 100, y = 270, size = 16, r = 200, g = 200, b = 200 })
+    local w, h = engine.window.get_size()
+    local center_x = w / 2
+    local text_col_x = center_x - 150 
+    
+    local text_primary = self.theme.text_primary
+    local text_secondary = self.theme.text_secondary
+    local text_success = self.theme.accent3
+    local accent_colour = self.theme.accent
+
+    engine.draw.clear({ colour = self.theme.bg_main })
+
+    engine.draw.text({ text = "AUDIO TEST", x = text_col_x, y = 100, size = 20, colour = accent_colour })
+    engine.draw.text({ text = "SPACE - Play", x = text_col_x, y = 150, size = 16, colour = text_secondary })
+    engine.draw.text({ text = "P - Pause", x = text_col_x, y = 180, size = 16, colour = text_secondary })
+    engine.draw.text({ text = "R - Resume", x = text_col_x, y = 210, size = 16, colour = text_secondary })
+    engine.draw.text({ text = "S - Stop", x = text_col_x, y = 240, size = 16, colour = text_secondary })
+    engine.draw.text({ text = "ESC - Return", x = text_col_x, y = 270, size = 16, colour = text_secondary })
 
     local playing = engine.audio.is_music_playing()
     local status = playing and "Playing" or "Stopped"
-    engine.draw.text({ text = "Status: " .. status, x = 100, y = 350, size = 16, r = 100, g = 255, b = 100 })
+    engine.draw.text({ text = "Status: " .. status, x = text_col_x, y = 350, size = 16, colour = text_success })
 end
 
 function test_audio:unload()

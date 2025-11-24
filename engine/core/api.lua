@@ -70,4 +70,8 @@ if _config.modules.collision then
     api.collision = require("engine.modules.collision")
 end
 
+if _config.modules.ui then
+    api.ui = require("engine.ui.init")
+end
+
 return api

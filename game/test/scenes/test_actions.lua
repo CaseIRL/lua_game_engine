@@ -7,14 +7,20 @@ local test_actions = {}
 function test_actions:load()
     print("Actions test scene loaded")
 
-    engine.actions.map_action("move_left", {"a", "arrowleft"})
-    engine.actions.map_action("move_right", {"d", "arrowright"})
-    engine.actions.map_action("move_up", {"w", "arrowup"})
-    engine.actions.map_action("move_down", {"s", "arrowdown"})
-    engine.actions.map_action("jump", {"space"})
-    engine.actions.map_action("shoot", {{ mouse_button = 0 }})
+    local w, h = engine.window.get_size()
+    self.center_x = w / 2
+    self.center_y = h / 2
 
-    self.player_x = 400
+    self.theme = engine.ui.style.get_theme() 
+
+    engine.actions.map_action("move_left", { "a", "arrowleft" })
+    engine.actions.map_action("move_right", { "d", "arrowright" })
+    engine.actions.map_action("move_up", { "w", "arrowup" })
+    engine.actions.map_action("move_down", { "s", "arrowdown" })
+    engine.actions.map_action("jump", { "space" })
+    engine.actions.map_action("shoot", { { mouse_button = 0 } })
+
+    self.player_x = self.center_x
     self.player_y = 300
     self.speed = 200
     self.is_jumping = false
@@ -60,21 +66,30 @@ function test_actions:update(dt)
 end
 
 function test_actions:draw()
-    engine.draw.clear({r = 40, g = 40, b = 40})
-
-    engine.draw.text({ text = "ACTIONS TEST", x = 100, y = 30, size = 24, r = 255, g = 255, b = 255 })
-    engine.draw.text({ text = "WASD / Arrow Keys - Move", x = 100, y = 100, size = 14, r = 200, g = 200, b = 200 })
-    engine.draw.text({ text = "SPACE - Jump", x = 100, y = 130, size = 14, r = 200, g = 200, b = 200 })
-    engine.draw.text({ text = "LMB - Shoot", x = 100, y = 160, size = 14, r = 200, g = 200, b = 200 })
-    engine.draw.text({ text = "ESC - Close", x = 100, y = 190, size = 14, r = 200, g = 200, b = 200 })
+    local w, h = engine.window.get_size()
+    local center_x = w / 2
     
+    engine.draw.clear({ colour = self.theme.bg_main })
 
-    engine.draw.circle({ x = self.player_x, y = self.player_y, radius = 15, r = 100, g = 200, b = 255 })
+    local text_primary = self.theme.text_primary
+    local text_secondary = self.theme.text_secondary
+    local accent_colour = self.theme.accent
+    local text_success = self.theme.accent3
     
-    engine.draw.line({ x1 = 0, y1 = self.ground_y + 20, x2 = 800, y2 = self.ground_y + 20, r = 100, g = 100, b = 100 })
+    local text_col_x = center_x - 150
+
+    engine.draw.text({ text = "ACTIONS TEST", x = text_col_x, y = 30, size = 24, colour = accent_colour })
+    engine.draw.text({ text = "WASD / Arrow Keys - Move", x = text_col_x, y = 100, size = 14, colour = text_secondary })
+    engine.draw.text({ text = "SPACE - Jump", x = text_col_x, y = 130, size = 14, colour = text_secondary })
+    engine.draw.text({ text = "LMB - Shoot", x = text_col_x, y = 160, size = 14, colour = text_secondary })
+    engine.draw.text({ text = "ESC - Close", x = text_col_x, y = 190, size = 14, colour = text_secondary })
+
+    engine.draw.circle({ x = self.player_x, y = self.player_y, radius = 15, colour = accent_colour })
+
+    engine.draw.line({ x1 = 0, y1 = self.ground_y + 20, x2 = w,y2 = self.ground_y + 20, colour = self.theme.border_light.colour })
 
     local jump_status = self.is_jumping and "Jumping" or "Grounded"
-    engine.draw.text({ text = "Status: " .. jump_status, x = 100, y = 250, size = 14, r = 100, g = 255, b = 100 })
+    engine.draw.text({ text = "Status: " .. jump_status, x = text_col_x, y = 250, size = 14, colour = text_success })
 end
 
 function test_actions:unload()

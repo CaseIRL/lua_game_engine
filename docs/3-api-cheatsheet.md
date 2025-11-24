@@ -6,21 +6,24 @@ They all have access to any modules enabled within the `config.lua`
 
 # Drawing
 
+You can use `colour` or `color`; just bugs me having to remember both since English.
+
 ```lua
-engine.draw.clear({ r?, g?, b?, a? })                                       -- Clear screen to color
-engine.draw.line({ x1, y1, x2, y2, r?, g?, b?, a? })                        -- Draw line
-engine.draw.rect({ x, y, w, h, r?, g?, b?, a? })                            -- Draw filled rectangle
-engine.draw.rect_lines({ x, y, w, h, r?, g?, b?, a? })                      -- Draw rectangle outline
-engine.draw.circle({ x, y, radius?, r?, g?, b?, a? })                       -- Draw filled circle
-engine.draw.circle_lines({ x, y, radius?, r?, g?, b?, a? })                 -- Draw circle outline
-engine.draw.triangle({ x1, y1, x2, y2, x3, y3, r?, g?, b?, a? })            -- Draw filled triangle
-engine.draw.triangle_lines({ x1, y1, x2, y2, x3, y3, r?, g?, b?, a? })      -- Draw triangle outline
-engine.draw.ellipse({ x, y, rx?, ry?, r?, g?, b?, a? })                     -- Draw filled ellipse
-engine.draw.polygon({ x, y, sides?, radius?, rotation?, r?, g?, b?, a? })   -- Draw regular polygon
-engine.draw.text({ text, x, y, size?, r?, g?, b?, a? })                     -- Draw text
+engine.draw.clear({ colour? })                                          -- Clear screen to colour
+engine.draw.line({ x1, y1, x2, y2, colour? })                           -- Draw line
+engine.draw.rect({ x, y, w, h, colour? })                               -- Draw filled rectangle
+engine.draw.rect_lines({ x, y, w, h, colour? })                         -- Draw rectangle outline
+engine.draw.circle({ x, y, radius?, colour? })                          -- Draw filled circle
+engine.draw.circle_lines({ x, y, radius?, colour? })                    -- Draw circle outline
+engine.draw.triangle({ x1, y1, x2, y2, x3, y3, colour? })               -- Draw filled triangle
+engine.draw.triangle_lines({ x1, y1, x2, y2, x3, y3, colour? })         -- Draw triangle outline
+engine.draw.ellipse({ x, y, rx?, ry?, colour? })                        -- Draw filled ellipse
+engine.draw.polygon({ x, y, sides?, radius?, rotation?, colour? })      -- Draw regular polygon
+engine.draw.text({ text, x, y, size?, colour? })                        -- Draw text
 ```
 
-**Colour defaults:** r=255, g=255, b=255, a=255 (white)
+**Colour format:** `{ R, G, B, A }` array (0-255)
+**Colour defaults:** `{ 255, 255, 255, 255 }` (white)
 **Other defaults:** radius=10, size=16, sides=6, rotation=0, rx=20, ry=20
 
 # Images
@@ -91,6 +94,48 @@ engine.collision.distance_between({ p1, p2 })                     -- Distance be
 **Point format:** `{ x, y }`
 **Rect format:** `{ x, y, width, height }`
 **Circle format:** center `{ x, y }` and `radius`
+
+# UI
+
+## Style
+```lua
+engine.ui.style.set_theme(name)            -- Set the active theme by name
+engine.ui.style.get_theme()                -- Returns: current active theme table
+engine.ui.style.get(key)                   -- Returns: specific style value from current theme
+```
+
+**Available themes:** `default`
+
+**Style properties:**
+- Fonts: `header_font`, `text_font`
+- Border radius: `border_radius_outer`, `border_radius_inner`, `border_radius_small`
+- Backgrounds: `bg_main`, `bg_panel`, `bg_hover`, `bg_overlay`
+- Text colours: `text_primary`, `text_secondary`, `text_tertiary`
+- Accents: `accent`, `accent2`, `accent3`, `accent4`
+- Borders: `border_dark`, `border_light`, `border_accent`, `border_dashed`, `border_transparent`
+- Shadows: `shadow_soft`, `shadow_medium`, `shadow_large`
+- Text shadows: `text_shadow_hard`
+- Scrollbars: `scrollbar_track`, `scrollbar_thumb`
+
+**Border/Shadow format:** `{ colour = {R, G, B, A}, thickness = N }` or `{ offset_x, offset_y, blur, {R, G, B, A} }`
+
+## Button
+```lua
+local btn = engine.ui.button.new({ x, y, w, h, text?, on_click? })      -- Create button instance
+btn:update(mouse_x, mouse_y, mouse_pressed)                             -- Update button state each frame
+btn:draw()                                                              -- Draw button
+btn:is_hovered(mouse_x, mouse_y)                                        -- Returns: true if mouse over button
+```
+
+**Button properties:**
+- `x, y, w, h` - Position and size
+- `text` - Button label text
+- `on_click` - Callback function when clicked
+- `hovered` - Current hover state (read-only)
+- `active` - Currently pressed state (read-only)
+- `enabled` - Whether button responds to input (can be set)
+
+**Button defaults:** w=100, h=40, text="", on_click=nil
 
 # Audio
 ```lua

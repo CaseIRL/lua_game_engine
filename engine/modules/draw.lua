@@ -57,59 +57,77 @@ local new_vec2 = ffi.typeof("Vector2")
 
 local draw = {}
 
---- Draw a line between two points.
---- @param opts table `{ x1, y1, x2, y2, r?, g?, b?, a? }`
-function draw.line(opts)
-    opts = opts or {}
-    local colour = new_colour(opts.r or 255, opts.g or 255, opts.b or 255, opts.a or 255)
-    _rl.DrawLine(opts.x1, opts.y1, opts.x2, opts.y2, colour)
+--- Helper function to convert the style array {R, G, B, A} to a Raylib Color FFI object.
+--- It strictly looks for the 'colour' field, which is expected to be an array.
+--- @param opts table Drawing options table
+--- @return Color Raylib Color FFI object
+local function build_colour(opts)
+    local colour_array = opts.colour or opts.color -- Expecting {R, G, B, A} array
+    
+    -- Default to white if array is missing or invalid
+    local r, g, b, a = 255, 255, 255, 255
+    
+    if type(colour_array) == "table" and #colour_array >= 4 then
+        r, g, b, a = colour_array[1], colour_array[2], colour_array[3], colour_array[4]
+    end
+    
+    return new_colour(r, g, b, a)
 end
 
+
 --- Draw a filled rectangle.
---- @param opts table `{ x, y, w, h, r?, g?, b?, a? }`
+--- @param opts table `{ x, y, w, h, colour? }`
 function draw.rect(opts)
     opts = opts or {}
-    local colour = new_colour(opts.r or 255, opts.g or 255, opts.b or 255, opts.a or 255)
+    local colour = build_colour(opts)
     _rl.DrawRectangle(opts.x, opts.y, opts.w, opts.h, colour)
 end
 
+--- Draw a rectangle outline.
+--- @param opts table `{ x, y, w, h, colour? }`
+function draw.rect_lines(opts)
+    opts = opts or {}
+    local colour = build_colour(opts)
+    _rl.DrawRectangleLines(opts.x, opts.y, opts.w, opts.h, colour)
+end
+
 --- Draw text on the screen.
---- @param opts table `{ text, x, y, size?, r?, g?, b?, a? }`
+--- @param opts table `{ text, x, y, size?, colour? }`
 function draw.text(opts)
     opts = opts or {}
-    local colour = new_colour(opts.r or 255, opts.g or 255, opts.b or 255, opts.a or 255)
+    local colour = build_colour(opts)
     _rl.DrawText(opts.text, opts.x, opts.y, opts.size or 16, colour)
 end
 
+--- Draw a line between two points.
+--- @param opts table `{ x1, y1, x2, y2, colour? }`
+function draw.line(opts)
+    opts = opts or {}
+    local colour = build_colour(opts)
+    _rl.DrawLine(opts.x1, opts.y1, opts.x2, opts.y2, colour)
+end
+
 --- Draw a filled circle.
---- @param opts table `{ x, y, radius?, r?, g?, b?, a? }`
+--- @param opts table `{ x, y, radius?, colour? }`
 function draw.circle(opts)
     opts = opts or {}
-    local colour = new_colour(opts.r or 255, opts.g or 255, opts.b or 255, opts.a or 255)
+    local colour = build_colour(opts)
     _rl.DrawCircle(opts.x, opts.y, opts.radius or 10, colour)
 end
 
 --- Draw a circle outline.
---- @param opts table `{ x, y, radius?, r?, g?, b?, a? }`
+--- @param opts table `{ x, y, radius?, colour? }`
 function draw.circle_lines(opts)
     opts = opts or {}
-    local colour = new_colour(opts.r or 255, opts.g or 255, opts.b or 255, opts.a or 255)
+    local colour = build_colour(opts)
     _rl.DrawCircleLines(opts.x, opts.y, opts.radius or 10, colour)
 end
 
---- Draw a rectangle outline.
---- @param opts table `{ x, y, w, h, r?, g?, b?, a? }`
-function draw.rect_lines(opts)
-    opts = opts or {}
-    local colour = new_colour(opts.r or 255, opts.g or 255, opts.b or 255, opts.a or 255)
-    _rl.DrawRectangleLines(opts.x, opts.y, opts.w, opts.h, colour)
-end
-
 --- Draw a filled triangle.
---- @param opts table `{ x1, y1, x2, y2, x3, y3, r?, g?, b?, a? }`
+--- @param opts table `{ x1, y1, x2, y2, x3, y3, colour? }`
 function draw.triangle(opts)
     opts = opts or {}
-    local colour = new_colour(opts.r or 255, opts.g or 255, opts.b or 255, opts.a or 255)
+    local colour = build_colour(opts)
     local v1 = new_vec2(opts.x1 or 0, opts.y1 or 0)
     local v2 = new_vec2(opts.x2 or 0, opts.y2 or 0)
     local v3 = new_vec2(opts.x3 or 0, opts.y3 or 0)
@@ -117,10 +135,10 @@ function draw.triangle(opts)
 end
 
 --- Draw a triangle outline.
---- @param opts table `{ x1, y1, x2, y2, x3, y3, r?, g?, b?, a? }`
+--- @param opts table `{ x1, y1, x2, y2, x3, y3, colour? }`
 function draw.triangle_lines(opts)
     opts = opts or {}
-    local colour = new_colour(opts.r or 255, opts.g or 255, opts.b or 255, opts.a or 255)
+    local colour = build_colour(opts)
     local v1 = new_vec2(opts.x1 or 0, opts.y1 or 0)
     local v2 = new_vec2(opts.x2 or 0, opts.y2 or 0)
     local v3 = new_vec2(opts.x3 or 0, opts.y3 or 0)
@@ -128,27 +146,35 @@ function draw.triangle_lines(opts)
 end
 
 --- Draw an ellipse.
---- @param opts table `{ x, y, rx?, ry?, r?, g?, b?, a? }`
+--- @param opts table `{ x, y, rx?, ry?, colour? }`
 function draw.ellipse(opts)
     opts = opts or {}
-    local colour = new_colour(opts.r or 255, opts.g or 255, opts.b or 255, opts.a or 255)
+    local colour = build_colour(opts)
     _rl.DrawEllipse(opts.x or 0, opts.y or 0, opts.rx or 20, opts.ry or 20, colour)
 end
 
 --- Draw a regular polygon.
---- @param opts table `{ x, y, sides?, radius?, rotation?, r?, g?, b?, a? }`
+--- @param opts table `{ x, y, sides?, radius?, rotation?, colour? }`
 function draw.polygon(opts)
     opts = opts or {}
-    local colour = new_colour(opts.r or 255, opts.g or 255, opts.b or 255, opts.a or 255)
+    local colour = build_colour(opts)
     local center = new_vec2(opts.x or 0, opts.y or 0)
     _rl.DrawPoly(center, opts.sides or 6, opts.radius or 20, opts.rotation or 0, colour)
 end
 
---- Clear the background to a color.
---- @param opts table `{ r?, g?, b?, a? }`
+--- Clear the background to a colour.
+--- @param opts table `{ colour? }`
 function draw.clear(opts)
     opts = opts or {}
-    local colour = new_colour(opts.r or 10, opts.g or 10, opts.b or 20, opts.a or 255)
+    local colour_array = opts.colour -- Expecting {R, G, B, A} array
+    
+    -- Clear uses different defaults
+    local r, g, b, a = 10, 10, 20, 255
+    
+    if type(colour_array) == "table" and #colour_array >= 4 then
+        r, g, b, a = colour_array[1], colour_array[2], colour_array[3], colour_array[4]
+    end
+    local colour = new_colour(r, g, b, a)
     _rl.ClearBackground(colour)
 end
 

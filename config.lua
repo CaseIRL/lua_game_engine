@@ -57,11 +57,12 @@ return {
         mouse = true, -- Enables `mouse` input functions
         actions = true, -- Enables `action` mapping functions
         collision = true, -- Enables `collision` functions; these are basic if need more details add a physics library
+        ui = true, -- Enables ui module; handles pretty much the same as any gui lib
     },
 
     --- @section Game Scenes
 
-    default_scene = "test_image", -- Specify the default scene game should load; required for .exe.
+    default_scene = "test", -- Specify the default scene game should load; required for .exe.
 
     scenes = {
         -- Game scenes
@@ -73,6 +74,7 @@ return {
         test_audio = "test/scenes/test_audio",
         test_image = "test/scenes/test_image",
         test_actions = "test/scenes/test_actions",
-        test_collision = "test/scenes/test_collision"
+        test_collision = "test/scenes/test_collision",
+        test_ui = "test/scenes/test_ui"
     }
 }

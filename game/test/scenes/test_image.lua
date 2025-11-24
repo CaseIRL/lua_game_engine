@@ -1,16 +1,21 @@
 --[[
     Test file you can and should remove this :)
 ]]
-    
+
 local test_image = {}
 
 function test_image:load()
     print("Image test scene loaded")
     
+    local w, h = engine.window.get_size()
+    self.center_x = w / 2
+
+    self.theme = engine.ui.style.get_theme() 
+    
     self.image_loaded = false
     self.sprite_loaded = false
     
-    self.sprite_x = 640
+    self.sprite_x = self.center_x
     self.sprite_y = 360
     self.current_anim = "idle_down"
     self.current_frame = 1
@@ -25,11 +30,7 @@ function test_image:update(dt)
             self.image_loaded = false
             print("Image unloaded")
         else
-            engine.image.load({
-                type = "image",
-                key = "test_image",
-                path = "game/test/image/pixel_case.png"
-            })
+            engine.image.load({ type = "image", key = "test_image", path = "game/test/image/pixel_case.png" })
             self.image_loaded = true
             print("Image loaded")
         end
@@ -55,7 +56,7 @@ function test_image:update(dt)
                     walk_down = { x = 0, y = 4, frames = 4 },
                     walk_up = { x = 0, y = 5, frames = 4 },
                     walk_right = { x = 0, y = 6, frames = 4 },
-                    walk_left = { x = 0, y = 7, frames = 4 }                    
+                    walk_left = { x = 0, y = 7, frames = 4 } 
                 }
             })
             self.sprite_loaded = true
@@ -127,30 +128,31 @@ function test_image:update(dt)
 end
 
 function test_image:draw()
-    engine.draw.text({ text = "IMAGE TEST - All Image Functions", x = 100, y = 50, size = 20, r = 255, g = 255, b = 255 })
-    engine.draw.text({ text = "Press 'I' to load/unload image", x = 100, y = 100, size = 16, r = 200, g = 200, b = 200 })
-    engine.draw.text({ text = "Press 'O' to load/unload sprite | WASD to move", x = 100, y = 130, size = 16, r = 200, g = 200, b = 200 })
-    engine.draw.text({ text = "Press ESC to return", x = 100, y = 160, size = 16, r = 200, g = 200, b = 200 })
+    local w, h = engine.window.get_size()
+    local center_x = w / 2
+    local center_y = h / 2
+    local text_col_x = center_x - 300
+    
+    local accent_colour = self.theme.accent
+    local text_primary = self.theme.text_primary
+    local text_secondary = self.theme.text_secondary
+    local text_success = self.theme.accent3 
+
+    engine.draw.clear({ colour = self.theme.bg_main })
+
+    engine.draw.text({ text = "IMAGE TEST", x = text_col_x, y = 50, size = 20, colour = accent_colour })
+    engine.draw.text({ text = "Press 'I' to load/unload image", x = text_col_x, y = 100, size = 16, colour = text_secondary })
+    engine.draw.text({ text = "Press 'O' to load/unload sprite | WASD to move", x = text_col_x, y = 130, size = 16, colour = text_secondary })
+    engine.draw.text({ text = "Press ESC to quit", x = text_col_x, y = 160, size = 16, colour = text_secondary })
 
     if self.image_loaded then
-        local w, h = engine.window.get_size()
-        local center_x = w / 2
-        local center_y = h / 2
-        
-        engine.image.draw({ key = "test_image", x = center_x - 32, y = center_y - 32, scale = 2 })
+        engine.image.draw({ key = "test_image", x = center_x - 32, y = center_y - 32, scale = 4 })
     end
     
     if self.sprite_loaded then
-        engine.image.draw_sprite({
-            key = "test_sprite",
-            anim = self.current_anim,
-            frame = self.current_frame,
-            x = self.sprite_x,
-            y = self.sprite_y,
-            scale = 1
-        })
-        
-        engine.draw.text({ text = "Sprite: " .. self.current_anim .. " Frame: " .. self.current_frame, x = 100, y = 200, size = 14, r = 100, g = 255, b = 100 })
+        engine.image.draw_sprite({ key = "test_sprite", anim = self.current_anim, frame = self.current_frame, x = self.sprite_x, y = self.sprite_y })
+
+        engine.draw.text({ text = "Sprite: " .. self.current_anim .. " Frame: " .. self.current_frame, x = text_col_x, y = 200, size = 14, colour = text_success })
     end
 end
 
