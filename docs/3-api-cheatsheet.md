@@ -9,17 +9,17 @@ They all have access to any modules enabled within the `config.lua`
 You can use `colour` or `color`; just bugs me having to remember both since English.
 
 ```lua
-engine.draw.clear({ colour? })                                          -- Clear screen to colour
-engine.draw.line({ x1, y1, x2, y2, colour? })                           -- Draw line
-engine.draw.rect({ x, y, w, h, colour? })                               -- Draw filled rectangle
-engine.draw.rect_lines({ x, y, w, h, colour? })                         -- Draw rectangle outline
-engine.draw.circle({ x, y, radius?, colour? })                          -- Draw filled circle
-engine.draw.circle_lines({ x, y, radius?, colour? })                    -- Draw circle outline
-engine.draw.triangle({ x1, y1, x2, y2, x3, y3, colour? })               -- Draw filled triangle
-engine.draw.triangle_lines({ x1, y1, x2, y2, x3, y3, colour? })         -- Draw triangle outline
-engine.draw.ellipse({ x, y, rx?, ry?, colour? })                        -- Draw filled ellipse
-engine.draw.polygon({ x, y, sides?, radius?, rotation?, colour? })      -- Draw regular polygon
-engine.draw.text({ text, x, y, size?, colour? })                        -- Draw text
+engine.draw.clear({ colour? })                                                          -- Clear screen to colour
+engine.draw.line({ x1, y1, x2, y2, colour? })                                           -- Draw line
+engine.draw.rect({ x, y, w, h, colour?, roundness?, segments? })                        -- Draw filled rectangle (now supports roundness)
+engine.draw.rect_lines({ x, y, w, h, colour?, roundness?, segments?, line_thick? })     -- Draw rectangle outline (now supports roundness)
+engine.draw.circle({ x, y, radius?, colour? })                                          -- Draw filled circle
+engine.draw.circle_lines({ x, y, radius?, colour? })                                    -- Draw circle outline
+engine.draw.triangle({ x1, y1, x2, y2, x3, y3, colour? })                               -- Draw filled triangle
+engine.draw.triangle_lines({ x1, y1, x2, y2, x3, y3, colour? })                         -- Draw triangle outline
+engine.draw.ellipse({ x, y, rx?, ry?, colour? })                                        -- Draw filled ellipse
+engine.draw.polygon({ x, y, sides?, radius?, rotation?, colour? })                      -- Draw regular polygon
+engine.draw.text({ text, x, y, size?, colour? })                                        -- Draw text
 ```
 
 **Colour format:** `{ R, G, B, A }` array (0-255)
@@ -121,21 +121,22 @@ engine.ui.style.get(key)                   -- Returns: specific style value from
 
 ## Button
 ```lua
-local btn = engine.ui.button.new({ x, y, w, h, text?, on_click? })      -- Create button instance
-btn:update(mouse_x, mouse_y, mouse_pressed)                             -- Update button state each frame
-btn:draw()                                                              -- Draw button
-btn:is_hovered(mouse_x, mouse_y)                                        -- Returns: true if mouse over button
+local btn = engine.ui.button.new({ x, y, w, h, text?, on_click?, roundness?, segments? })   -- Create button instance (now supports roundness)
+btn:update(mouse_x, mouse_y, mouse_pressed)                                                 -- Update button state each frame
+btn:draw()                                                                                  -- Draw button
+btn:is_hovered(mouse_x, mouse_y)                                                            -- Returns: true if mouse over button
 ```
 
 **Button properties:**
 - `x, y, w, h` - Position and size
 - `text` - Button label text
 - `on_click` - Callback function when clicked
+- `roundness`, `segments` - Determines if the button is drawn with rounded corners
 - `hovered` - Current hover state (read-only)
 - `active` - Currently pressed state (read-only)
 - `enabled` - Whether button responds to input (can be set)
 
-**Button defaults:** w=100, h=40, text="", on_click=nil
+**Button defaults:** w=100, h=40, text="", on_click=nil, roundness=nil
 
 # Audio
 ```lua

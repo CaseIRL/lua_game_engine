@@ -33,12 +33,18 @@
 local ffi = require("ffi")
 
 ffi.cdef[[
+    typedef struct { float x, y, width, height; } Rectangle; 
     typedef struct { unsigned char r, g, b, a; } Color;
     typedef struct { float x, y; } Vector2;
 
     void DrawLine(int startPosX, int startPosY, int endPosX, int endPosY, Color color);
     void DrawRectangle(int posX, int posY, int width, int height, Color color);
+    void DrawRectangleRec(Rectangle rec, Color color);
     void DrawRectangleLines(int posX, int posY, int width, int height, Color color);
+
+    void DrawRectangleRounded(Rectangle rec, float roundness, int segments, Color color);
+    void DrawRectangleRoundedLinesEx(Rectangle rec, float roundness, int segments, float lineThick, Color color);
+
     void DrawText(const char *text, int posX, int posY, int fontSize, Color color);
     void DrawCircle(int centerX, int centerY, float radius, Color color);
     void DrawCircleLines(int centerX, int centerY, float radius, Color color);
@@ -52,43 +58,57 @@ ffi.cdef[[
 local _rl = ffi.load("raylib")
 local new_colour = ffi.typeof("Color")
 local new_vec2 = ffi.typeof("Vector2")
+local new_rect = ffi.typeof("Rectangle")
 
 --- @section Module
 
 local draw = {}
 
 --- Helper function to convert the style array {R, G, B, A} to a Raylib Color FFI object.
---- It strictly looks for the 'colour' field, which is expected to be an array.
 --- @param opts table Drawing options table
 --- @return Color Raylib Color FFI object
 local function build_colour(opts)
-    local colour_array = opts.colour or opts.color -- Expecting {R, G, B, A} array
-    
-    -- Default to white if array is missing or invalid
+    local colour_array = opts.colour or opts.color
     local r, g, b, a = 255, 255, 255, 255
-    
+
     if type(colour_array) == "table" and #colour_array >= 4 then
         r, g, b, a = colour_array[1], colour_array[2], colour_array[3], colour_array[4]
     end
-    
+
     return new_colour(r, g, b, a)
 end
 
-
 --- Draw a filled rectangle.
---- @param opts table `{ x, y, w, h, colour? }`
+--- @param opts table `{ x, y, w, h, colour?, roundness?, segments? }`
 function draw.rect(opts)
     opts = opts or {}
     local colour = build_colour(opts)
-    _rl.DrawRectangle(opts.x, opts.y, opts.w, opts.h, colour)
+    local rec = new_rect(opts.x, opts.y, opts.w, opts.h)
+
+    if opts.roundness ~= nil then
+        local roundness = opts.roundness
+        local segments = opts.segments or 0
+        _rl.DrawRectangleRounded(rec, roundness, segments, colour)
+    else
+        _rl.DrawRectangleRec(rec, colour)
+    end
 end
 
---- Draw a rectangle outline.
---- @param opts table `{ x, y, w, h, colour? }`
+--- Draw a rectangle outline (or rounded outline if 'roundness' is provided).
+--- @param opts table `{ x, y, w, h, colour?, roundness?, segments?, line_thick? }`
 function draw.rect_lines(opts)
     opts = opts or {}
     local colour = build_colour(opts)
-    _rl.DrawRectangleLines(opts.x, opts.y, opts.w, opts.h, colour)
+
+    if opts.roundness ~= nil then
+        local rec = new_rect(opts.x, opts.y, opts.w, opts.h)
+        local roundness = opts.roundness
+        local segments = opts.segments or 0
+        local line_thick = opts.line_thick or 1.0
+        _rl.DrawRectangleRoundedLinesEx(rec, roundness, segments, line_thick, colour)
+    else
+        _rl.DrawRectangleLines(opts.x, opts.y, opts.w, opts.h, colour)
+    end
 end
 
 --- Draw text on the screen.
@@ -166,11 +186,9 @@ end
 --- @param opts table `{ colour? }`
 function draw.clear(opts)
     opts = opts or {}
-    local colour_array = opts.colour -- Expecting {R, G, B, A} array
-    
-    -- Clear uses different defaults
+    local colour_array = opts.colour or opts.color
     local r, g, b, a = 10, 10, 20, 255
-    
+
     if type(colour_array) == "table" and #colour_array >= 4 then
         r, g, b, a = colour_array[1], colour_array[2], colour_array[3], colour_array[4]
     end
