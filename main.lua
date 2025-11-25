@@ -35,25 +35,28 @@ local _api = _engine.api or false
 
 --- @section Preload
 
+--- Config
 local _config = _engine.loader.load_module("config")
 
-if _config.mods and _config.mods.enabled and _engine.mods then
-    _engine.mods.init(_api, _config.mods.directory)
+--- Init mods if mods enables
+if _config.modules.mods and _engine.mods then
+    _engine.mods.init(_api, "mods")
 end
 
-local scene_type = arg[1] or _config.default_scene or "test"
-
+--- Run all scene files through sandbox prior to running
 local sandboxed_scenes = {}
 for name, path in pairs(_config.scenes) do
     sandboxed_scenes[name] = _engine.loader.load_module("game." .. path, _api)
 end
 
-_engine.window.init(_config)
-
+--- Sets and load scenes, load game `default_scene` or fallback to engine default
+local scene_type = arg[1] or _config.default_scene or "test"
 local scene = sandboxed_scenes[scene_type] or _engine.loader.load_module("engine.scenes.default", _api)
-
 _engine.scene.set_scenes(sandboxed_scenes)
 _engine.scene.load(scene)
+
+--- Init the window with the `config` values
+_engine.window.init(_config)
 
 --- @section Main loop
 
@@ -64,6 +67,10 @@ while not _engine.window.should_close() do
 
     if _config.fps.draw then
         _engine.window.draw_fps(10, 10)
+    end
+
+    if _config.modules.actions then
+        _engine.actions.update()
     end
 
     _engine.scene.update(dt)

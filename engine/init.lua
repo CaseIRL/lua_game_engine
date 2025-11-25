@@ -42,7 +42,9 @@ engine.window = require("engine.core.window")
 engine.loader = _loader
 engine.scene = require("engine.core.scene")
 engine.api = require("engine.core.api")
+engine.filesystem = require("engine.core.filesystem")
 engine.ui = require("engine.ui.init")
+
 
 -- Optional modules
 if _config.modules.draw then

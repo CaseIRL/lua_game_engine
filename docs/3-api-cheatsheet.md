@@ -4,6 +4,61 @@ Quick reference for the framework, refer back to this for help.
 Engine modules are loaded into game files through sandbox.
 They all have access to any modules enabled within the `config.lua`
 
+# Actions
+
+Allows for mapping input controls.
+
+```lua
+engine.actions.map_action(name, bindings)      -- Map an action name to key/mouse bindings
+engine.actions.is_action_pressed(name)         -- Returns true on the frame the action is pressed
+engine.actions.is_action_down(name)            -- Returns true while the action is held down
+engine.actions.is_action_released(name)        -- Returns true on the frame the action is released
+engine.actions.hold_time(name)                 -- Returns how long the action has been held (seconds)
+engine.actions.clear_actions()                 -- Remove all mapped actions
+
+```
+
+**Binding formats:**
+- Keyboard: `"a"`, `"space"`, `"arrowup"`, etc. (same as keyboard module)
+- Mouse: `{ mouse_button = 0 }` (0=left, 1=right, 2=middle)
+- Multiple bindings: `{"a", "arrowleft", { mouse_button = 0 }}`
+
+# Audio
+```lua
+engine.audio.load_sound(key, path)              -- Load sound effect from file
+engine.audio.load_music(key, path)              -- Load music from file
+engine.audio.play_sound(key)                    -- Play sound effect
+engine.audio.play_music(key, loop?)             -- Play music (loop defaults to false)
+engine.audio.stop_music()                       -- Stop current music
+engine.audio.pause_music()                      -- Pause current music
+engine.audio.resume_music()                     -- Resume paused music
+engine.audio.set_sound_volume(key, volume)      -- Set sound volume (0.0-1.0)
+engine.audio.set_sound_pitch(key, pitch)        -- Set sound pitch (1.0 = normal, 0.5 = half speed, 2.0 = double)
+engine.audio.set_music_volume(key, volume)      -- Set music volume (0.0-1.0)
+engine.audio.set_music_pitch(key, pitch)        -- Set music pitch (1.0 = normal)
+engine.audio.is_music_playing()                 -- Returns: true if music playing
+engine.audio.unload_sound(key)                  -- Unload sound effect
+engine.audio.unload_music(key)                  -- Unload music
+engine.audio.cleanup()                          -- Clean up all audio resources
+```
+
+**Audio support:** WAV, OGG (MP3 support depends on Raylib build)
+**Volume range:** 0.0 (silent) to 1.0 (full volume)
+**Pitch range:** 0.5 (half speed) to 2.0+ (variable speed)
+
+# Collision
+```lua
+engine.collision.point_in_rect({ point, rect })                    -- Is point inside rectangle?
+engine.collision.point_in_circle({ point, center, radius })       -- Is point inside circle?
+engine.collision.rects_overlap({ rect1, rect2 })                  -- Do two rectangles overlap?
+engine.collision.circles_overlap({ c1_center, c1_radius, c2_center, c2_radius }) -- Do two circles overlap?
+engine.collision.distance_between({ p1, p2 })                     -- Distance between two points
+```
+
+**Point format:** `{ x, y }`
+**Rect format:** `{ x, y, width, height }`
+**Circle format:** center `{ x, y }` and `radius`
+
 # Drawing
 
 You can use `colour` or `color`; just bugs me having to remember both since English.
@@ -25,6 +80,16 @@ engine.draw.text({ text, x, y, size?, colour? })                                
 **Colour defaults:** `{ 255, 255, 255, 255 }` (white)
 **Other defaults:** radius=10, size=16, sides=6, rotation=0, rx=20, ry=20
 
+# Filesystem
+```lua
+engine.filesystem.exists(path)              -- Returns: true if a file or directory exists in save/
+engine.filesystem.create_directory(path)    -- Create a directory inside save/ (auto-creates nested dirs)
+engine.filesystem.serialize(table)          -- Returns: Lua-formatted string of a serialized table
+engine.filesystem.save(path, data)          -- Save a Lua table to save/path as a .lua file
+engine.filesystem.load(path)                -- Returns: loaded table from save/path or nil, error
+engine.filesystem.delete(path)              -- Delete a file inside save/ directory
+```
+
 # Images
 ```lua
 engine.image.load({ type, key, path, frame_width?, frame_height?, animations? })                -- Load image or sprite
@@ -43,7 +108,7 @@ Image load options:
 
 **Draw defaults:** scale = 1.0, tint = white (optional)
 
-# Input
+# Inputs
 
 ## Keyboard
 ```lua
@@ -66,32 +131,6 @@ engine.mouse.unlock()                  -- Enable cursor movement
 
 **Key names:** `a-z`, `0-9`, `space`, `enter`, `escape`, `tab`, `arrowup`, `arrowdown`, `arrowleft`, `arrowright`, `shift`, `ctrl`, `alt`, `f1-f12`, etc.
 **Mouse buttons:** `0` = left, `1` = right, `2` = middle
-
-## Action mapping
-```lua
-engine.actions.map_action(name, bindings)      -- Register action with key/mouse bindings
-engine.actions.is_action_pressed(name)         -- Action triggered this frame
-engine.actions.is_action_down(name)            -- Action held down
-engine.actions.clear_actions()                 -- Unregister all actions
-```
-
-**Binding formats:**
-- Keyboard: `"a"`, `"space"`, `"arrowup"`, etc. (same as keyboard module)
-- Mouse: `{ mouse_button = 0 }` (0=left, 1=right, 2=middle)
-- Multiple bindings: `{"a", "arrowleft", { mouse_button = 0 }}`
-
-# Collision
-```lua
-engine.collision.point_in_rect({ point, rect })                    -- Is point inside rectangle?
-engine.collision.point_in_circle({ point, center, radius })       -- Is point inside circle?
-engine.collision.rects_overlap({ rect1, rect2 })                  -- Do two rectangles overlap?
-engine.collision.circles_overlap({ c1_center, c1_radius, c2_center, c2_radius }) -- Do two circles overlap?
-engine.collision.distance_between({ p1, p2 })                     -- Distance between two points
-```
-
-**Point format:** `{ x, y }`
-**Rect format:** `{ x, y, width, height }`
-**Circle format:** center `{ x, y }` and `radius`
 
 # UI
 
@@ -135,29 +174,6 @@ btn:is_hovered(mouse_x, mouse_y)                                                
 - `enabled` - Whether button responds to input (can be set)
 
 **Button defaults:** w=100, h=40, text="", on_click=nil, roundness=nil
-
-# Audio
-```lua
-engine.audio.load_sound(key, path)              -- Load sound effect from file
-engine.audio.load_music(key, path)              -- Load music from file
-engine.audio.play_sound(key)                    -- Play sound effect
-engine.audio.play_music(key, loop?)             -- Play music (loop defaults to false)
-engine.audio.stop_music()                       -- Stop current music
-engine.audio.pause_music()                      -- Pause current music
-engine.audio.resume_music()                     -- Resume paused music
-engine.audio.set_sound_volume(key, volume)      -- Set sound volume (0.0-1.0)
-engine.audio.set_sound_pitch(key, pitch)        -- Set sound pitch (1.0 = normal, 0.5 = half speed, 2.0 = double)
-engine.audio.set_music_volume(key, volume)      -- Set music volume (0.0-1.0)
-engine.audio.set_music_pitch(key, pitch)        -- Set music pitch (1.0 = normal)
-engine.audio.is_music_playing()                 -- Returns: true if music playing
-engine.audio.unload_sound(key)                  -- Unload sound effect
-engine.audio.unload_music(key)                  -- Unload music
-engine.audio.cleanup()                          -- Clean up all audio resources
-```
-
-**Audio support:** WAV, OGG (MP3 support depends on Raylib build)
-**Volume range:** 0.0 (silent) to 1.0 (full volume)
-**Pitch range:** 0.5 (half speed) to 2.0+ (variable speed)
 
 # Scenes
 ```lua

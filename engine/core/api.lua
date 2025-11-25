@@ -79,4 +79,8 @@ if _config.modules.mods then
     api.mods = require("engine.modules.mods")
 end
 
+if _config.modules.filesystem then
+    api.filesystem = require("engine.core.filesystem")
+end
+
 return api

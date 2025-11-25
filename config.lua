@@ -66,13 +66,6 @@ return {
         target = false -- Target fps (sort of works a cap) false or number
     },
 
-    --- @section Mods
-    
-    mods = {
-        enabled = true,        -- Enable/disable mod system
-        directory = "mods"     -- Where to look for mods
-    },
-
     --- @section Modules
 
     modules = {
@@ -84,7 +77,8 @@ return {
         actions = true, -- Enables `action` mapping functions
         collision = true, -- Enables `collision` functions; these are basic if need more details add a physics library
         ui = true, -- Enables ui module; handles pretty much the same as any gui lib
-        mods = true, -- Enables mod support; loads all mods and allows access to `hooks`
+        mods = true, -- Enables mod support; loads all mods and allows access to `engine.hooks`
+        filesystem = true, -- Basic file saving and loading; useful for single player persistance
     },
 
     --- @section Game Scenes
@@ -103,6 +97,7 @@ return {
         test_actions = "test/scenes/test_actions",
         test_collision = "test/scenes/test_collision",
         test_ui = "test/scenes/test_ui",
-        test_mods = "test/scenes/test_mods"
+        test_mods = "test/scenes/test_mods",
+        test_filesystem = "test/scenes/test_filesystem"
     }
 }
