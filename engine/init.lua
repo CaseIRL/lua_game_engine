@@ -73,5 +73,10 @@ if _config.modules.collision then
     engine.collision = require("engine.modules.collision")
 end
 
+if _config.modules.mods then
+    engine.hooks = require("engine.modules.hooks")
+    engine.mods = require("engine.modules.mods")
+end
+
 return engine
 

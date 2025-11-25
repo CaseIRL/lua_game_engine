@@ -37,6 +37,10 @@ local _api = _engine.api or false
 
 local _config = _engine.loader.load_module("config")
 
+if _config.mods and _config.mods.enabled and _engine.mods then
+    _engine.mods.init(_api, _config.mods.directory)
+end
+
 local scene_type = arg[1] or _config.default_scene or "test"
 
 local sandboxed_scenes = {}

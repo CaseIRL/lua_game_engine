@@ -26,7 +26,7 @@
 ]]
 
 --- @module engine.core.loader
---- @description Loads and sandboxes game files, providing an isolated environment for game scripts.
+--- @description Loads and sandboxes game and mod files, providing an isolated environment for scripts.
 
 --- @section Module
 
@@ -34,8 +34,11 @@ local loader = {}
 
 --- Create a sandboxed environment containing the engine API and safe Lua functions.
 --- @param api table The engine API table exposed inside the sandbox.
+--- @param is_mod boolean Whether this is a mod (changes print prefix)
 --- @return table env A sandbox environment table.
-local function create_sandbox_env(api)
+local function create_sandbox_env(api, is_mod)
+    local prefix = is_mod and "[MOD]" or "[GAME]"
+    
     local env = {
         engine = api,
 
@@ -51,30 +54,35 @@ local function create_sandbox_env(api)
         pcall = pcall,
         xpcall = xpcall,
 
-        --- Print with a prefix to distinguish script output.
-        --- @param msg any The message to print.
         print = function(msg)
-            print("[GAME] " .. tostring(msg))
+            print(prefix .. " " .. tostring(msg))
         end,
     }
 
-    --- Sandbox require: loads from `game/` inside the sandbox.
-    --- @param path string Relative game module path.
-    --- @return any The loaded module.
     function env.require(path)
-        local full_path = "game." .. path
-        return loader.load_module(full_path, api)
+        if path:match("^game%.") or path:match("^mods%.") then
+            return loader.load_module(path, api)
+        else
+            local full_path = "game." .. path
+            return loader.load_module(full_path, api)
+        end
     end
 
     return env
 end
 
 --- Load and execute a Lua module with optional sandboxing.
---- @param module_path string Module path using dots, e.g. "game.scenes.test"
+--- @param module_path string Module path using dots, e.g. "game.scenes.test" or "mods.test.mod"
 --- @param api table|nil Engine API exposed to sandboxed code. If nil, no sandbox is applied.
 --- @return any result The return value of the executed module.
 function loader.load_module(module_path, api)
+    -- Convert dots to path separators (works on both Windows and Unix)
     local file_path = module_path:gsub("%.", "/") .. ".lua"
+    
+    -- On Windows, convert forward slashes to backslashes
+    if package.config:sub(1,1) == '\\' then
+        file_path = file_path:gsub("/", "\\")
+    end
 
     local file = io.open(file_path, "r")
     if not file then
@@ -91,7 +99,8 @@ function loader.load_module(module_path, api)
 
     local env
     if api then
-        env = create_sandbox_env(api)
+        local is_mod = module_path:match("^mods%.") ~= nil
+        env = create_sandbox_env(api, is_mod)
     else
         env = {
             require = require,

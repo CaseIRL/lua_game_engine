@@ -74,4 +74,9 @@ if _config.modules.ui then
     api.ui = require("engine.ui.init")
 end
 
+if _config.modules.mods then
+    api.hooks = require("engine.modules.hooks")
+    api.mods = require("engine.modules.mods")
+end
+
 return api

@@ -7,7 +7,6 @@ They all have access to any modules enabled within the `config.lua`
 # Drawing
 
 You can use `colour` or `color`; just bugs me having to remember both since English.
-
 ```lua
 engine.draw.clear({ colour? })                                                          -- Clear screen to colour
 engine.draw.line({ x1, y1, x2, y2, colour? })                                           -- Draw line
@@ -82,7 +81,6 @@ engine.actions.clear_actions()                 -- Unregister all actions
 - Multiple bindings: `{"a", "arrowleft", { mouse_button = 0 }}`
 
 # Collision
-
 ```lua
 engine.collision.point_in_rect({ point, rect })                    -- Is point inside rectangle?
 engine.collision.point_in_circle({ point, center, radius })       -- Is point inside circle?
@@ -162,7 +160,6 @@ engine.audio.cleanup()                          -- Clean up all audio resources
 **Pitch range:** 0.5 (half speed) to 2.0+ (variable speed)
 
 # Scenes
-
 ```lua
 engine.scene.set_scenes(table)     -- Register scenes from config
 engine.scene.switch(name)          -- Switch to scene by name
@@ -171,7 +168,6 @@ engine.scene.draw()                -- Draw current scene (called by engine)
 ```
 
 **Scene structure:**
-
 ```lua
 local scene = {}
 
@@ -183,8 +179,26 @@ function scene:unload() end            -- Called when switching away
 return scene
 ```
 
-# Window
+# Mods & Hooks
 
+The mod system allows you to create hook-based extensions that listen to game events.
+You can use these functions to register, fire, and listen to events between game code and mods.
+*(mod file structure will change, for now its a test)*
+
+```lua
+engine.mods.list()                              -- Get a table listing all currently loaded mods (name, version, author, etc.)
+```
+```lua
+engine.hooks.register(name, description)        -- Register a new hook type (e.g., "player_damage")
+engine.hooks.listen(name, callback)             -- Add a function to execute when a hook fires
+engine.hooks.fire(name, data)                   -- Trigger the hook, running all listening functions
+engine.hooks.unlisten(name, callback)           -- Remove a specific function listener
+engine.hooks.clear(name)                        -- Remove all listeners for a specific hook
+engine.hooks.clear_all()                        -- Remove all listeners from all hooks
+engine.hooks.list()                             -- Get a list of all registered hook names
+```
+
+# Window
 ```lua
 engine.window.get_size()            -- Returns: width, height
 engine.window.get_dt()              -- Returns: delta time (seconds)

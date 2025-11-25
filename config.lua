@@ -40,11 +40,18 @@ return {
         }
     },
 
-    --- @section FPS Settings
+    --- @section FPS
 
     fps = { 
         draw = true, -- Draws fps to the screen
         target = 144 -- Target fps (sort of works a cap)
+    },
+
+    --- @section Mods
+    
+    mods = {
+        enabled = true,        -- Enable/disable mod system
+        directory = "mods"     -- Where to look for mods
     },
 
     --- @section Modules
@@ -58,6 +65,7 @@ return {
         actions = true, -- Enables `action` mapping functions
         collision = true, -- Enables `collision` functions; these are basic if need more details add a physics library
         ui = true, -- Enables ui module; handles pretty much the same as any gui lib
+        mods = true, -- Enables mod support; loads all mods and allows access to `hooks`
     },
 
     --- @section Game Scenes
@@ -75,6 +83,7 @@ return {
         test_image = "test/scenes/test_image",
         test_actions = "test/scenes/test_actions",
         test_collision = "test/scenes/test_collision",
-        test_ui = "test/scenes/test_ui"
+        test_ui = "test/scenes/test_ui",
+        test_mods = "test/scenes/test_mods"
     }
 }
