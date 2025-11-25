@@ -34,9 +34,28 @@ return {
 
     window = {
         title = "Lua Engine", -- Window title
+        icon = "case_icon.png", -- WIndow icon
         size = {
             width = 1280, -- Window width
             height = 720  -- Window height
+        },
+        flags = { -- Raylib window flags
+            vsync_hint = false,
+            fullscreen_mode = false,
+            resizable = false,
+            undecorated = false,
+            transparent = false,
+            hidden = false,
+            minimized = false,
+            maximized = false,
+            unfocused = false,
+            topmost = false,
+            always_run = false,
+            highdpi = false,
+            mouse_passthrough = false,
+            borderless_windowed_mode = false,
+            msaa_4x_hint = false,
+            interlaced_hint = false
         }
     },
 
@@ -44,7 +63,7 @@ return {
 
     fps = { 
         draw = true, -- Draws fps to the screen
-        target = 144 -- Target fps (sort of works a cap)
+        target = false -- Target fps (sort of works a cap) false or number
     },
 
     --- @section Mods

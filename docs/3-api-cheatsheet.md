@@ -205,6 +205,10 @@ engine.window.get_dt()              -- Returns: delta time (seconds)
 engine.window.get_fps()             -- Returns: current FPS
 engine.window.draw_fps(x, y)        -- Draw FPS counter on screen
 engine.window.toggle_fullscreen()   -- Toggle fullscreen
+engine.window.get_position()        -- Returns: x, y screen position of the window
+engine.window.set_position(x, y)    -- Move window to screen position (x, y)
+engine.window.minimize()            -- Minimize the window
+
 ```
 
 ---
