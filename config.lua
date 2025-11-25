@@ -34,7 +34,7 @@ return {
 
     window = {
         title = "Lua Engine", -- Window title
-        icon = "case_icon.png", -- WIndow icon
+        icon = "case_icon.png", -- Window icon
         size = {
             width = 1280, -- Window width
             height = 720  -- Window height

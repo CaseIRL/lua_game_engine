@@ -191,9 +191,60 @@ function window.should_close()
     return _rl.WindowShouldClose() ~= 0
 end
 
---- Toggle fullscreen mode.
+--- Toggle a specific window flag
+--- @param flag_name string Name of the flag (e.g., "fullscreen_mode", "topmost")
+--- @param enabled boolean Whether to enable or disable the flag
+function window.toggle_flag(flag_name, enabled)
+    local flag_constant = FLAG_MAP[string.lower(flag_name)]
+    if not flag_constant then
+        print("Warning: Unknown flag '" .. flag_name .. "'")
+        return
+    end
+    
+    if enabled then
+        _rl.SetWindowState(flag_constant)
+        window.flags[flag_name] = true
+    else
+        _rl.ClearWindowState(flag_constant)
+        window.flags[flag_name] = false
+    end
+end
+
+--- Toggle fullscreen mode (convenience function)
 function window.toggle_fullscreen()
     _rl.ToggleFullscreen()
+    window.flags.fullscreen_mode = not window.flags.fullscreen_mode
+end
+
+--- Set borderless windowed mode
+--- @param enabled boolean Whether to enable borderless mode
+function window.set_borderless(enabled)
+    window.toggle_flag("borderless_windowed_mode", enabled)
+end
+
+--- Set window to be always on top
+--- @param enabled boolean Whether window should be topmost
+function window.set_topmost(enabled)
+    window.toggle_flag("topmost", enabled)
+end
+
+--- Set window resizable state
+--- @param enabled boolean Whether window should be resizable
+function window.set_resizable(enabled)
+    window.toggle_flag("resizable", enabled)
+end
+
+--- Set window decorated state (window border/title bar)
+--- @param enabled boolean Whether window should have decorations
+function window.set_decorated(enabled)
+    window.toggle_flag("undecorated", not enabled)
+end
+
+--- Check if a window flag is currently enabled
+--- @param flag_name string Name of the flag to check
+--- @return boolean Whether the flag is enabled
+function window.is_flag_enabled(flag_name)
+    return window.flags[flag_name] or false
 end
 
 --- Get the current window size.
