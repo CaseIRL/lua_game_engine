@@ -54,13 +54,28 @@ function scene.set_scenes(scenes_table)
     scene.scenes = scenes_table
 end
 
---- Switch to a scene by name.
---- @param scene_name string Name of the scene to switch to.
-function scene.switch(scene_name)
-    if scene.scenes[scene_name] then
-        scene.load(scene.scenes[scene_name])
-    else
-        print("Scene not found:", scene_name)
+--- Switch to a different scene by name
+--- @param name string Scene name
+--- @param data table? Optional data to pass to the new scene
+function scene.switch(name, data)
+    local next_scene = scene.scenes[name]
+    
+    if not next_scene then
+        error("Scene '" .. name .. "' not found")
+    end
+
+    if scene.current and scene.current.unload then
+        scene.current:unload()
+    end
+
+    scene.current = next_scene
+
+    if data then
+        scene.current._scene_data = data
+    end
+    
+    if scene.current.load then
+        scene.current:load()
     end
 end
 

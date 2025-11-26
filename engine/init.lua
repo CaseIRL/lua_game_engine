@@ -45,7 +45,6 @@ engine.api = require("engine.core.api")
 engine.filesystem = require("engine.core.filesystem")
 engine.ui = require("engine.ui.init")
 
-
 -- Optional modules
 if _config.modules.draw then
     engine.draw = require("engine.modules.draw")
@@ -78,6 +77,10 @@ end
 if _config.modules.mods then
     engine.hooks = require("engine.modules.hooks")
     engine.mods = require("engine.modules.mods")
+end
+
+if _config.modules.network then
+    engine.network = require("engine.modules.network")
 end
 
 return engine

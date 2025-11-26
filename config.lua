@@ -63,7 +63,16 @@ return {
 
     fps = { 
         draw = true, -- Draws fps to the screen
-        target = false -- Target fps (sort of works a cap) false or number
+        target = 500 -- Target fps (sort of works a cap) false or number
+    },
+
+    --- @section Network
+
+    network = { -- Runs of a server relay
+        ip = "127.0.0.1", -- Replace with your ip
+        port = 8000, -- Replace with your port
+        type = "mixed", -- Mixed is recommended: "tcp" or "udp" or "mixed"
+        none_blocking = true -- Toggle none blocking
     },
 
     --- @section Modules
@@ -79,11 +88,12 @@ return {
         ui = true, -- Enables ui module; handles pretty much the same as any gui lib
         mods = true, -- Enables mod support; loads all mods and allows access to `engine.hooks`
         filesystem = true, -- Basic file saving and loading; useful for single player persistance
+        network = true, -- Enable networking; requires a basic relay server
     },
 
     --- @section Game Scenes
 
-    default_scene = "test", -- Specify the default scene game should load; required for .exe.
+    default_scene = "test_network1", -- Specify the default scene game should load; required for .exe.
 
     scenes = {
         -- Game scenes
@@ -98,6 +108,8 @@ return {
         test_collision = "test/scenes/test_collision",
         test_ui = "test/scenes/test_ui",
         test_mods = "test/scenes/test_mods",
-        test_filesystem = "test/scenes/test_filesystem"
+        test_filesystem = "test/scenes/test_filesystem",
+        test_network1 = "test/scenes/test_network1",
+        test_network2 = "test/scenes/test_network2"
     }
 }

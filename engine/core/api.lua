@@ -40,6 +40,7 @@ local api = {}
 -- Core modules
 api.scene = require("engine.core.scene")
 api.window = require("engine.core.window")
+api.config = _config
 
 -- Optional modules
 if _config.modules.draw then
@@ -81,6 +82,10 @@ end
 
 if _config.modules.filesystem then
     api.filesystem = require("engine.core.filesystem")
+end
+
+if _config.modules.network then
+    api.network = require("engine.modules.network")
 end
 
 return api
