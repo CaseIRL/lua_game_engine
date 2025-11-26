@@ -232,6 +232,18 @@ engine.window.set_decorated(enabled)                -- Enable/disable window dec
 engine.window.is_flag_enabled(flag_name)            -- Returns: true if the given window flag is active
 ```
 
+# Networking
+
+TCP/UDP networking; setup a simple server relay and connect, send, receive.
+
+```lua
+engine.network.connect(ip, port)                -- Returns object containing tcp and udp sockets
+engine.network.send(conn, msg, force_udp)       -- Returns true if the message was sent
+engine.network.receive(conn, size)              -- Returns table with tcp and udp arrays containing received messages
+engine.network.close(conn)                      -- Connection object
+engine.network.cleanup()                        -- Clean up winsock resources
+```
+
 ---
 
 # Next Steps
