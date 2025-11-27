@@ -22,6 +22,8 @@ The plan is straight forward: make the engine I want to use.
 If you like it too? Great.
 If not? Fork it and build your own.
 
+PR's are unlikely to be pushed right now, need to get the plan ironed in first.
+
 # What It Does
 
 ### Scene System
@@ -155,6 +157,7 @@ PRs during alpha are unlikely - I'm still figuring out how I want things structu
 - **[Architecture](/docs/2-architecture.md)** - How it's structured
 - **[API Cheatsheet](/docs/3-api-cheatsheet.md)** - Quick reference
 - **[Creating Scenes](/docs/4-creating-scenes.md)** - Patterns and examples
+- **[Building Exe](/docs/5-building-exe.md)** - Instructions for building game as .exe currently only for windows
 
 # Tech Stack
 
