@@ -155,10 +155,9 @@ PRs during alpha are unlikely - I'm still figuring out how I want things structu
 
 # Documentation
 
-- **[Architecture](/docs/2-architecture.md)** - How it's structured
-- **[API Cheatsheet](/docs/3-api-cheatsheet.md)** - Quick reference
-- **[Creating Scenes](/docs/4-creating-scenes.md)** - Patterns and examples
-- **[Building Exe](/docs/5-building-exe.md)** - Instructions for building game as .exe currently only for windows
+- **[API Cheatsheet](/docs/2-api-cheatsheet.md)** - Quick reference
+- **[Creating Scenes](/docs/3-creating-scenes.md)** - Patterns and examples
+- **[Building Exe](/docs/4-building-exe.md)** - Instructions for building game as .exe currently only for windows
 
 # Tech Stack
 
