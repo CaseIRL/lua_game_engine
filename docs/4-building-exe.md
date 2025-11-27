@@ -50,7 +50,7 @@ Replace `mygame` with your desired executable name.
 
 1.  Scans all Lua files in `src/` and `game/`
 2.  Bundles them as hex-encoded byte arrays in C
-3.  Reads `game/conf.lua` for build settings (console mode, icon)
+3.  Reads `game/conf.lua` for build settings (console mode, modules etc)
 4.  Compiles with MSVC
 5.  Copies required DLLs (`lua51.dll`, `raylib.dll`)
 6.  Cleans up temporary files (`.c`, `.obj`, `.rc`, `.res`)
@@ -121,11 +121,6 @@ build = {
 - Check `default_scene` is set in `game/conf.lua`
 - Run from command prompt to see error output
 - Enable console mode: set `window.console = true` in config
-
-**Icon not showing**
-- Icon must be `.ico` format (not PNG)
-- Icon file must exist at build time
-- Check path in `game/conf.lua` is correct
 
 **Missing DLLs error**
 - Copy `lua51.dll` and `raylib.dll` to same folder as exe
