@@ -5,6 +5,7 @@
 <img width="1282" height="752" alt="image" src="https://github.com/user-attachments/assets/d9627cd3-e28a-48b5-8f7c-d61476f8e5a7" />
 <img width="1282" height="752" alt="image" src="https://github.com/user-attachments/assets/54a26d45-4b2c-485b-a66f-ba810f4c0ed7" />
 <img width="1282" height="752" alt="image" src="https://github.com/user-attachments/assets/697ede59-ef35-4f49-8ef8-9bbf590dd264" />
+<img width="1282" height="752" alt="image" src="https://github.com/user-attachments/assets/065d5a7b-9d10-43ab-8ff2-9b070ba3a424" />
 
 # LuaJIT FFI Game Engine
 
