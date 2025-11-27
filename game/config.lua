@@ -70,7 +70,7 @@ return {
     --- @section Network
 
     network = { -- Runs of a server relay
-        ip = "87.106.110.127", -- Replace with your ip
+        ip = "127.0.0.1", -- Replace with your ip
         port = 8000, -- Replace with your port
         type = "mixed", -- Mixed is recommended: "tcp" or "udp" or "mixed"
         none_blocking = true -- Toggle none blocking
