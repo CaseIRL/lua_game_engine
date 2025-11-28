@@ -117,6 +117,7 @@ return {
         test_mods = "src.test.scenes.test_mods",
         test_filesystem = "src.test.scenes.test_filesystem",
         test_network1 = "src.test.scenes.test_network1",
-        test_network2 = "src.test.scenes.test_network2"
+        test_network2 = "src.test.scenes.test_network2",
+        test_runner = "src.test.scenes.test_runner"
     }
 }
