@@ -146,11 +146,11 @@ build = {
 
 ### Multiple builds:
 ```cmd
-luajit build.lua game_debug
-luajit build.lua game_release
+lua build.lua game_debug
+lua build.lua game_release
 ```
 
-### Custom MSVC version:
+### Changing MSVC version:
 Edit `build.lua` and update the `cl_exe` path to your specific MSVC installation.
 
 ### Packaging for distribution:

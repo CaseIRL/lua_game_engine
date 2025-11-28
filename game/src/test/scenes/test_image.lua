@@ -30,7 +30,7 @@ function test_image:update(dt)
             self.image_loaded = false
             print("Image unloaded")
         else
-            engine.image.load({ type = "image", key = "test_image", path = "game/test/image/pixel_case.png" })
+            engine.image.load({ type = "image", key = "test_image", path = "game/src/test/image/pixel_case.png" })
             self.image_loaded = true
             print("Image loaded")
         end
@@ -45,7 +45,7 @@ function test_image:update(dt)
             engine.image.load({
                 type = "sprite",
                 key = "test_sprite",
-                path = "game/test/image/rpg_base_character_16.png",
+                path = "game/src/test/image/rpg_base_character_16.png",
                 frame_width = 16,
                 frame_height = 16,
                 animations = {
