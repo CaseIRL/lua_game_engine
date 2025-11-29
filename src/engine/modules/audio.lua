@@ -78,7 +78,7 @@ local _rl = ffi.load("raylib")
 
 --- @section Module
 
-local audio = {
+local m = {
     sounds = {},
     music = {},
     current_music = nil,
@@ -89,21 +89,21 @@ local audio = {
 --- Load a sound effect from file.
 --- @param key string Unique identifier for this sound
 --- @param path string Path to sound file (WAV, OGG, etc)
-function audio.load_sound(key, path)
-    if audio.sounds[key] then
+function m.load_sound(key, path)
+    if m.sounds[key] then
         return
     end
     local sound = _rl.LoadSound(path)
     if _rl.IsSoundValid(sound) then
-        audio.sounds[key] = sound
+        m.sounds[key] = sound
     end
 end
 
 --- Load a music track from file.
 --- @param key string Unique identifier for this music
 --- @param path string Path to music file (WAV, OGG, etc)
-function audio.load_music(key, path)
-    if audio.music[key] then
+function m.load_music(key, path)
+    if m.music[key] then
         return
     end
     
@@ -121,130 +121,130 @@ function audio.load_music(key, path)
         return false
     end
     
-    audio.music[key] = sound
-    audio.music_loop[key] = false
+    m.music[key] = sound
+    m.music_loop[key] = false
     return true
 end
 
 --- Play a sound effect.
 --- @param key string Sound identifier (must be loaded first)
-function audio.play_sound(key)
-    if audio.sounds[key] then
-        _rl.PlaySound(audio.sounds[key])
+function m.play_sound(key)
+    if m.sounds[key] then
+        _rl.PlaySound(m.sounds[key])
     end
 end
 
 --- Play music (stops current music if playing).
 --- @param key string Music identifier (must be loaded first)
 --- @param loop? boolean Whether to loop (default: false)
-function audio.play_music(key, loop)
-    if not audio.music[key] then
+function m.play_music(key, loop)
+    if not m.music[key] then
         return
     end
     
-    if audio.current_music and audio.current_music ~= key then
-        _rl.StopSound(audio.music[audio.current_music])
+    if m.current_music and m.current_music ~= key then
+        _rl.StopSound(m.music[m.current_music])
     end
     
-    audio.current_music = key
-    audio.music_loop[key] = loop or false
-    _rl.PlaySound(audio.music[key])
+    m.current_music = key
+    m.music_loop[key] = loop or false
+    _rl.PlaySound(m.music[key])
 end
 
 --- Stop current music.
-function audio.stop_music()
-    if audio.current_music and audio.music[audio.current_music] then
-        _rl.StopSound(audio.music[audio.current_music])
-        audio.current_music = nil
+function m.stop_music()
+    if m.current_music and m.music[m.current_music] then
+        _rl.StopSound(m.music[m.current_music])
+        m.current_music = nil
     end
 end
 
 --- Pause current music.
-function audio.pause_music()
-    if audio.current_music and audio.music[audio.current_music] then
-        _rl.PauseSound(audio.music[audio.current_music])
+function m.pause_music()
+    if m.current_music and m.music[m.current_music] then
+        _rl.PauseSound(m.music[m.current_music])
     end
 end
 
 --- Resume current music.
-function audio.resume_music()
-    if audio.current_music and audio.music[audio.current_music] then
-        _rl.ResumeSound(audio.music[audio.current_music])
+function m.resume_music()
+    if m.current_music and m.music[m.current_music] then
+        _rl.ResumeSound(m.music[m.current_music])
     end
 end
 
 --- Set volume for a sound effect (0.0 to 1.0).
 --- @param key string Sound identifier
 --- @param volume number Volume level (0.0 = silent, 1.0 = full)
-function audio.set_sound_volume(key, volume)
-    if audio.sounds[key] then
-        _rl.SetSoundVolume(audio.sounds[key], math.max(0, math.min(1, volume)))
+function m.set_sound_volume(key, volume)
+    if m.sounds[key] then
+        _rl.SetSoundVolume(m.sounds[key], math.max(0, math.min(1, volume)))
     end
 end
 
 --- Set pitch/playback speed for a sound effect (1.0 = normal).
 --- @param key string Sound identifier
 --- @param pitch number Pitch level (0.5 = half speed, 2.0 = double speed)
-function audio.set_sound_pitch(key, pitch)
-    if audio.sounds[key] then
-        _rl.SetSoundPitch(audio.sounds[key], pitch)
+function m.set_sound_pitch(key, pitch)
+    if m.sounds[key] then
+        _rl.SetSoundPitch(m.sounds[key], pitch)
     end
 end
 
 --- Set volume for music (0.0 to 1.0).
 --- @param key string Music identifier
 --- @param volume number Volume level (0.0 = silent, 1.0 = full)
-function audio.set_music_volume(key, volume)
-    if audio.music[key] then
-        _rl.SetSoundVolume(audio.music[key], math.max(0, math.min(1, volume)))
+function m.set_music_volume(key, volume)
+    if m.music[key] then
+        _rl.SetSoundVolume(m.music[key], math.max(0, math.min(1, volume)))
     end
 end
 
 --- Set pitch/playback speed for music (1.0 = normal).
 --- @param key string Music identifier
 --- @param pitch number Pitch level (0.5 = half speed, 2.0 = double speed)
-function audio.set_music_pitch(key, pitch)
-    if audio.music[key] then
-        _rl.SetSoundPitch(audio.music[key], pitch)
+function m.set_music_pitch(key, pitch)
+    if m.music[key] then
+        _rl.SetSoundPitch(m.music[key], pitch)
     end
 end
 
 --- Check if music is currently playing.
 --- @return boolean True if music is playing
-function audio.is_music_playing()
-    if audio.current_music and audio.music[audio.current_music] then
-        return _rl.IsSoundPlaying(audio.music[audio.current_music])
+function m.is_music_playing()
+    if m.current_music and m.music[m.current_music] then
+        return _rl.IsSoundPlaying(m.music[m.current_music])
     end
     return false
 end
 
 --- Unload a sound effect.
 --- @param key string Sound identifier
-function audio.unload_sound(key)
-    if audio.sounds[key] then
-        _rl.UnloadSound(audio.sounds[key])
-        audio.sounds[key] = nil
+function m.unload_sound(key)
+    if m.sounds[key] then
+        _rl.UnloadSound(m.sounds[key])
+        m.sounds[key] = nil
     end
 end
 
 --- Unload music.
 --- @param key string Music identifier
-function audio.unload_music(key)
-    if audio.music[key] then
-        _rl.UnloadSound(audio.music[key])
-        audio.music[key] = nil
-        audio.music_loop[key] = nil
+function m.unload_music(key)
+    if m.music[key] then
+        _rl.UnloadSound(m.music[key])
+        m.music[key] = nil
+        m.music_loop[key] = nil
     end
 end
 
 --- Clean up all audio resources.
-function audio.cleanup()
-    for key in pairs(audio.sounds) do
-        audio.unload_sound(key)
+function m.cleanup()
+    for key in pairs(m.sounds) do
+        m.unload_sound(key)
     end
-    for key in pairs(audio.music) do
-        audio.unload_music(key)
+    for key in pairs(m.music) do
+        m.unload_music(key)
     end
 end
 
-return audio
+return m

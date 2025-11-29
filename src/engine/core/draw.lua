@@ -62,7 +62,7 @@ local new_rect = ffi.typeof("Rectangle")
 
 --- @section Module
 
-local draw = {}
+local m = {}
 
 --- Helper function to convert the style array {R, G, B, A} to a Raylib Color FFI object.
 --- @param opts table Drawing options table
@@ -80,7 +80,7 @@ end
 
 --- Draw a filled rectangle.
 --- @param opts table `{ x, y, w, h, colour?, roundness?, segments? }`
-function draw.rect(opts)
+function m.rect(opts)
     opts = opts or {}
     local colour = build_colour(opts)
     local rec = new_rect(opts.x, opts.y, opts.w, opts.h)
@@ -96,7 +96,7 @@ end
 
 --- Draw a rectangle outline (or rounded outline if 'roundness' is provided).
 --- @param opts table `{ x, y, w, h, colour?, roundness?, segments?, line_thick? }`
-function draw.rect_lines(opts)
+function m.rect_lines(opts)
     opts = opts or {}
     local colour = build_colour(opts)
 
@@ -113,7 +113,7 @@ end
 
 --- Draw text on the screen.
 --- @param opts table `{ text, x, y, size?, colour? }`
-function draw.text(opts)
+function m.text(opts)
     opts = opts or {}
     local colour = build_colour(opts)
     _rl.DrawText(opts.text, opts.x, opts.y, opts.size or 16, colour)
@@ -121,7 +121,7 @@ end
 
 --- Draw a line between two points.
 --- @param opts table `{ x1, y1, x2, y2, colour? }`
-function draw.line(opts)
+function m.line(opts)
     opts = opts or {}
     local colour = build_colour(opts)
     _rl.DrawLine(opts.x1, opts.y1, opts.x2, opts.y2, colour)
@@ -129,7 +129,7 @@ end
 
 --- Draw a filled circle.
 --- @param opts table `{ x, y, radius?, colour? }`
-function draw.circle(opts)
+function m.circle(opts)
     opts = opts or {}
     local colour = build_colour(opts)
     _rl.DrawCircle(opts.x, opts.y, opts.radius or 10, colour)
@@ -137,7 +137,7 @@ end
 
 --- Draw a circle outline.
 --- @param opts table `{ x, y, radius?, colour? }`
-function draw.circle_lines(opts)
+function m.circle_lines(opts)
     opts = opts or {}
     local colour = build_colour(opts)
     _rl.DrawCircleLines(opts.x, opts.y, opts.radius or 10, colour)
@@ -145,7 +145,7 @@ end
 
 --- Draw a filled triangle.
 --- @param opts table `{ x1, y1, x2, y2, x3, y3, colour? }`
-function draw.triangle(opts)
+function m.triangle(opts)
     opts = opts or {}
     local colour = build_colour(opts)
     local v1 = new_vec2(opts.x1 or 0, opts.y1 or 0)
@@ -156,7 +156,7 @@ end
 
 --- Draw a triangle outline.
 --- @param opts table `{ x1, y1, x2, y2, x3, y3, colour? }`
-function draw.triangle_lines(opts)
+function m.triangle_lines(opts)
     opts = opts or {}
     local colour = build_colour(opts)
     local v1 = new_vec2(opts.x1 or 0, opts.y1 or 0)
@@ -167,7 +167,7 @@ end
 
 --- Draw an ellipse.
 --- @param opts table `{ x, y, rx?, ry?, colour? }`
-function draw.ellipse(opts)
+function m.ellipse(opts)
     opts = opts or {}
     local colour = build_colour(opts)
     _rl.DrawEllipse(opts.x or 0, opts.y or 0, opts.rx or 20, opts.ry or 20, colour)
@@ -175,7 +175,7 @@ end
 
 --- Draw a regular polygon.
 --- @param opts table `{ x, y, sides?, radius?, rotation?, colour? }`
-function draw.polygon(opts)
+function m.polygon(opts)
     opts = opts or {}
     local colour = build_colour(opts)
     local center = new_vec2(opts.x or 0, opts.y or 0)
@@ -184,7 +184,7 @@ end
 
 --- Clear the background to a colour.
 --- @param opts table `{ colour? }`
-function draw.clear(opts)
+function m.clear(opts)
     opts = opts or {}
     local colour_array = opts.colour or opts.color
     local r, g, b, a = 10, 10, 20, 255
@@ -196,4 +196,4 @@ function draw.clear(opts)
     _rl.ClearBackground(colour)
 end
 
-return draw
+return m

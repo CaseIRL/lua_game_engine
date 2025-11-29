@@ -127,13 +127,13 @@ end
 
 --- @section Module
 
-local network = {}
+local m = {}
 
 --- Connect to a remote host with both TCP and UDP sockets
 --- @param ip string Remote IP address
 --- @param port number Remote port
 --- @return table conn Connection object containing tcp and udp sockets
-function network.connect(ip, port)
+function m.connect(ip, port)
     local conn = {
         ip = ip,
         port = port,
@@ -169,7 +169,7 @@ end
 --- @param msg string Message to send
 --- @param force_udp boolean|nil Force sending via UDP
 --- @return boolean success True if the message was sent
-function network.send(conn, msg, force_udp)
+function m.send(conn, msg, force_udp)
     if not conn or not msg then return false end
 
     if (msg:find("^POS:") or msg:find("^UDP_INIT:")) and conn.udp and not force_udp ~= true then
@@ -189,7 +189,7 @@ end
 --- @param conn table Connection object
 --- @param size number|nil Maximum buffer size (default 4096)
 --- @return table result Table with tcp and udp arrays containing received messages
-function network.receive(conn, size)
+function m.receive(conn, size)
     if not conn then return {tcp = {}, udp = {}} end
     size = size or 4096
     local result = { tcp = {}, udp = {} }
@@ -243,15 +243,15 @@ end
 
 --- Close TCP and UDP sockets
 --- @param conn table Connection object
-function network.close(conn)
+function m.close(conn)
     if not conn then return end
     if conn.tcp then ws2_32.closesocket(conn.tcp) end
     if conn.udp then ws2_32.closesocket(conn.udp) end
 end
 
 --- Cleanup Winsock resources
-function network.cleanup()
+function m.cleanup()
     ws2_32.WSACleanup()
 end
 
-return network
+return m

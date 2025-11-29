@@ -57,7 +57,7 @@ local new_rect = ffi.typeof("Rectangle")
 
 --- @section Module
 
-local image = {
+local m = {
     images = {},
     sprites = {}
 }
@@ -91,15 +91,15 @@ end
 
 --- Load image or sprite
 --- @param opts table `{ type, key, path, frame_width?, frame_height?, animations? }`
-function image.load(opts)
+function m.load(opts)
     opts = opts or {}
     
-    if image.images[opts.key] then
+    if m.images[opts.key] then
         return
     end
     
     local texture = _rl.LoadTexture(opts.path)
-    image.images[opts.key] = texture
+    m.images[opts.key] = texture
     
     if opts.type ~= "sprite" then
         return
@@ -107,28 +107,28 @@ function image.load(opts)
     
     local frames = opts.animations and build_all_animations(opts.animations, opts.frame_width, opts.frame_height) or {}
     
-    image.sprites[opts.key] = { frame_width = opts.frame_width, frame_height = opts.frame_height, frames = frames }
+    m.sprites[opts.key] = { frame_width = opts.frame_width, frame_height = opts.frame_height, frames = frames }
 end
 
 --- Draw image at position
 --- @param opts table `{ key, x, y, scale?, tint? }`
-function image.draw(opts)
+function m.draw(opts)
     opts = opts or {}
-    if not image.images[opts.key] then
+    if not m.images[opts.key] then
         return
     end
     
     local scale = opts.scale or 1.0
     local color = make_color(opts.tint and opts.tint.r, opts.tint and opts.tint.g, opts.tint and opts.tint.b, opts.tint and opts.tint.a)
     
-    _rl.DrawTextureEx(image.images[opts.key], new_vec2(opts.x, opts.y), 0, scale, color)
+    _rl.DrawTextureEx(m.images[opts.key], new_vec2(opts.x, opts.y), 0, scale, color)
 end
 
 --- Draw sprite frame from spritesheet
 --- @param opts table `{ key, x, y, frame_width, frame_height, frame_x, frame_y, scale? }`
-function image.draw_frame(opts)
+function m.draw_frame(opts)
     opts = opts or {}
-    if not image.images[opts.key] then
+    if not m.images[opts.key] then
         return
     end
     
@@ -139,16 +139,16 @@ function image.draw_frame(opts)
     local pos = new_vec2(opts.x, opts.y)
     local white = make_color()
     
-    _rl.DrawTextureRec(image.images[opts.key], source, pos, white)
+    _rl.DrawTextureRec(m.images[opts.key], source, pos, white)
 end
 
 --- Draw sprite with animation metadata
 --- @param opts table `{ key, anim, frame, x, y, scale? }`
-function image.draw_sprite(opts)
+function m.draw_sprite(opts)
     opts = opts or {}
     
-    local sprite = image.sprites[opts.key]
-    if not sprite or not image.images[opts.key] then
+    local sprite = m.sprites[opts.key]
+    if not sprite or not m.images[opts.key] then
         return
     end
     
@@ -159,7 +159,7 @@ function image.draw_sprite(opts)
     
     local frame_data = anim_frames[opts.frame]
     
-    image.draw_frame({
+    m.draw_frame({
         key = opts.key,
         x = opts.x,
         y = opts.y,
@@ -173,21 +173,21 @@ end
 
 --- Unload and free image
 --- @param key string Image identifier
-function image.unload(key)
-    if not image.images[key] then
+function m.unload(key)
+    if not m.images[key] then
         return
     end
     
-    _rl.UnloadTexture(image.images[key])
-    image.images[key] = nil
-    image.sprites[key] = nil
+    _rl.UnloadTexture(m.images[key])
+    m.images[key] = nil
+    m.sprites[key] = nil
 end
 
 --- Clean up all images
-function image.cleanup()
-    for key in pairs(image.images) do
-        image.unload(key)
+function m.cleanup()
+    for key in pairs(m.images) do
+        m.unload(key)
     end
 end
 
-return image
+return m

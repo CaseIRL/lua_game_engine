@@ -28,7 +28,7 @@
 --- @module engine.modules.collision
 --- @description 2D collision detection and spatial queries
 
-local collision = {}
+local m = {}
 
 --- Calculate distance between two points
 --- @param p1 table Point {x, y}
@@ -41,7 +41,7 @@ end
 --- Check if a point is inside a rectangle
 --- @param opts table {point, rect}
 --- @return boolean
-function collision.point_in_rect(opts)
+function m.point_in_rect(opts)
     local point = opts.point
     local rect = opts.rect
     return point.x >= rect.x and point.x <= (rect.x + rect.width) and point.y >= rect.y and point.y <= (rect.y + rect.height)
@@ -50,7 +50,7 @@ end
 --- Check if a point is inside a circle
 --- @param opts table {point, center, radius}
 --- @return boolean
-function collision.point_in_circle(opts)
+function m.point_in_circle(opts)
     local point = opts.point
     local center = opts.center
     local radius = opts.radius
@@ -60,7 +60,7 @@ end
 --- Check if two rectangles overlap (AABB)
 --- @param opts table {rect1, rect2}
 --- @return boolean
-function collision.rects_overlap(opts)
+function m.rects_overlap(opts)
     local r1 = opts.rect1
     local r2 = opts.rect2
     return not (r1.x + r1.width < r2.x or r2.x + r2.width < r1.x or r1.y + r1.height < r2.y or r2.y + r2.height < r1.y)
@@ -69,7 +69,7 @@ end
 --- Check if two circles overlap
 --- @param opts table {c1_center, c1_radius, c2_center, c2_radius}
 --- @return boolean
-function collision.circles_overlap(opts)
+function m.circles_overlap(opts)
     local c1_center = opts.c1_center
     local c1_radius = opts.c1_radius
     local c2_center = opts.c2_center
@@ -80,8 +80,8 @@ end
 --- Get distance between two points
 --- @param opts table {p1, p2}
 --- @return number
-function collision.distance_between(opts)
+function m.distance_between(opts)
     return distance_2d(opts.p1, opts.p2)
 end
 
-return collision
+return m

@@ -45,7 +45,7 @@ local _rl = ffi.load("raylib")
 
 --- @section Module
 
-local actions = {
+local m = {
     _actions = {},
     _state = {}
 }
@@ -79,18 +79,18 @@ end
 --- Map an action name to a list of input bindings
 --- @param name string Unique name of the action
 --- @param bindings table List of bindings (string or table) associated with the action
-function actions.map_action(name, bindings)
-    actions._actions[name] = bindings
-    actions._state[name] = { held_since = nil, prev = false, current = false }
+function m.map_action(name, bindings)
+    m._actions[name] = bindings
+    m._state[name] = { held_since = nil, prev = false, current = false }
 end
 
 --- Update action states
-function actions.update()
+function m.update()
     local now = _rl.GetTime()
-    for name, bindings in pairs(actions._actions) do
-        local st = actions._state[name]
+    for name, bindings in pairs(m._actions) do
+        local st = m._state[name]
         st.prev = st.current
-        st.current = actions.is_action_down(name)
+        st.current = m.is_action_down(name)
         
         if st.current then
             if not st.held_since then
@@ -105,8 +105,8 @@ end
 --- Check if an action is currently pressed (instant press)
 --- @param name string Name of the action
 --- @return boolean True if any of the actions bindings are pressed, false otherwise
-function actions.is_action_pressed(name)
-    local bindings = actions._actions[name]
+function m.is_action_pressed(name)
+    local bindings = m._actions[name]
     return bindings and check_any_binding(bindings, function(device, key)
         return device.is_pressed(key)
     end) or false
@@ -115,29 +115,29 @@ end
 --- Check if an action is currently held down
 --- @param name string Name of the action
 --- @return boolean True if any of the actions bindings are held down, false otherwise
-function actions.is_action_down(name)
-    local bindings = actions._actions[name]
+function m.is_action_down(name)
+    local bindings = m._actions[name]
     return bindings and check_any_binding(bindings, function(device, key)
         return device.is_down(key)
     end) or false
 end
 
 --- Check if an action was just released this frame
---- Requires actions.update() to be called each frame
+--- Requires m.update() to be called each frame
 --- @param name string Name of the action
 --- @return boolean True if the action was released this frame
-function actions.is_action_released(name)
-    local st = actions._state[name]
+function m.is_action_released(name)
+    local st = m._state[name]
     if not st then return false end
     return st.prev == true and st.current == false
 end
 
 --- Get how long an action has been held down in seconds
---- Requires actions.update() to be called each frame
+--- Requires m.update() to be called each frame
 --- @param name string Name of the action
 --- @return number Seconds the action has been held (0 if not currently down)
-function actions.hold_time(name)
-    local st = actions._state[name]
+function m.hold_time(name)
+    local st = m._state[name]
     if not st or not st.current or not st.held_since then
         return 0
     end
@@ -145,9 +145,9 @@ function actions.hold_time(name)
 end
 
 --- Clear all action mappings
-function actions.clear_actions()
-    actions._actions = {}
-    actions._state = {}
+function m.clear_actions()
+    m._actions = {}
+    m._state = {}
 end
 
-return actions
+return m

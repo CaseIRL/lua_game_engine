@@ -30,68 +30,68 @@
 
 --- @section Module
 
-local scene = {
+local m = {
     current = false,
     scenes = {}
 }
 
 --- Load a new scene, unloading the current one if necessary.
 --- @param new_scene table Scene object with optional load/unload/update/draw methods.
-function scene.load(new_scene)
-    if scene.current and scene.current.unload then
-        scene.current:unload()
+function m.load(new_scene)
+    if m.current and m.current.unload then
+        m.current:unload()
     end
     
-    scene.current = new_scene
-    if scene.current.load then
-        scene.current:load()
+    m.current = new_scene
+    if m.current.load then
+        m.current:load()
     end
 end
 
 --- Set the available scenes table.
 --- @param scenes_table table Keyed table of scene objects.
-function scene.set_scenes(scenes_table)
-    scene.scenes = scenes_table
+function m.set_scenes(scenes_table)
+    m.scenes = scenes_table
 end
 
 --- Switch to a different scene by name
 --- @param name string Scene name
 --- @param data table? Optional data to pass to the new scene
-function scene.switch(name, data)
-    local next_scene = scene.scenes[name]
+function m.switch(name, data)
+    local next_scene = m.scenes[name]
     
     if not next_scene then
         error("Scene '" .. name .. "' not found")
     end
 
-    if scene.current and scene.current.unload then
-        scene.current:unload()
+    if m.current and m.current.unload then
+        m.current:unload()
     end
 
-    scene.current = next_scene
+    m.current = next_scene
 
     if data then
-        scene.current._scene_data = data
+        m.current._scene_data = data
     end
     
-    if scene.current.load then
-        scene.current:load()
+    if m.current.load then
+        m.current:load()
     end
 end
 
---- Update the current scene.
+--- Update the current scene
 --- @param dt number Delta time since last frame.
-function scene.update(dt)
-    if scene.current and scene.current.update then
-        scene.current:update(dt)
+function m.update(dt)
+    if m.current and m.current.update then
+        m.current:update(dt)
     end
 end
 
---- Draw the current scene.
-function scene.draw()
-    if scene.current and scene.current.draw then
-        scene.current:draw()
+--- Draw the current scene
+function m.draw()
+    if m.current and m.current.draw then
+        m.current:draw()
     end
 end
 
-return scene
+return m

@@ -46,7 +46,6 @@ local BUNDLED = is_bundled()
 
 local ffi = require("ffi")
 
--- FFI definitions for Windows directory scanning
 ffi.cdef[[
     typedef struct _WIN32_FIND_DATAA {
         uint32_t dwFileAttributes;
@@ -82,10 +81,10 @@ local FILE_ATTRIBUTE_DIRECTORY = 0x10
 
 --- @section Module
 
-local loader = {}
+local m = {}
 
 --- Loaded mods cache
-loader.loaded = {}
+m.loaded = {}
 
 --- Create a sandboxed environment containing the engine API and safe Lua functions.
 --- @param api table The engine API table exposed inside the sandbox.
@@ -97,7 +96,7 @@ local function create_sandbox_env(api, is_mod)
     local env = {
         engine = api,
 
-        -- Safe standard libs
+        -- Safe standard modules
         math = math,
         string = string,
         table = table,
@@ -109,6 +108,14 @@ local function create_sandbox_env(api, is_mod)
         pcall = pcall,
         xpcall = xpcall,
 
+        -- Safe os functions
+        os = {
+            time = os.time,
+            date = os.date,
+            clock = os.clock,
+            difftime = os.difftime
+        },
+
         print = function(msg)
             print(prefix .. " " .. tostring(msg))
         end,
@@ -116,10 +123,10 @@ local function create_sandbox_env(api, is_mod)
 
     function env.require(path)
         if path:match("^game%.") or path:match("^mods%.") then
-            return loader.load_module(path, api)
+            return m.load_module(path, api)
         else
             local full_path = "game." .. path
-            return loader.load_module(full_path, api)
+            return m.load_module(full_path, api)
         end
     end
 
@@ -182,61 +189,6 @@ local function scan_lua_files(directory)
     return files
 end
 
---- Load and execute a Lua module with optional sandboxing.
---- @param module_path string Module path using dots, e.g. "game.scenes.test" or "mods.test.mod"
---- @param api table|nil Engine API exposed to sandboxed code. If nil, no sandbox is applied.
---- @return any result The return value of the executed module.
-function loader.load_module(module_path, api)
-    if package.preload[module_path] then
-        return package.preload[module_path]()
-    end
-
-    local chunk
-    local found = false
-    
-    -- Try bundled loader first
-    for i = 1, #(package.searchers or package.loaders or {}) do
-        local searcher = (package.searchers or package.loaders)[i]
-        local loader_func = searcher(module_path)
-        if type(loader_func) == "function" then
-            chunk = loader_func
-            found = true
-            break
-        end
-    end
-    
-    -- Fall back to file loading
-    if not found then
-        local file_path = module_path:gsub("%.", "/") .. ".lua"
-        if package.config:sub(1,1) == '\\' then
-            file_path = file_path:gsub("/", "\\")
-        end
-
-        local file = io.open(file_path, "r")
-        if not file then
-            error("Module not found: " .. file_path)
-        end
-
-        local code = file:read("*a")
-        file:close()
-
-        local err
-        chunk, err = loadstring(code)
-        if not chunk then
-            error("Syntax error in " .. file_path .. ": " .. err)
-        end
-    end
-    
-    -- Apply sandbox if api provided
-    if api then
-        local is_mod = module_path:match("^mods%.") ~= nil
-        local env = create_sandbox_env(api, is_mod)
-        setfenv(chunk, env)
-    end
-    
-    return chunk()
-end
-
 --- Load a single Lua file from a mod folder
 --- @param file_path string Full path to the .lua file
 --- @param mod_name string The mod folder name
@@ -289,12 +241,61 @@ local function load_mod_file(file_path, mod_name, engine)
     return result
 end
 
+--- Load and execute a Lua module with optional sandboxing.
+--- @param module_path string Module path using dots, e.g. "game.scenes.test" or "mods.test.mod"
+--- @param api table|nil Engine API exposed to sandboxed code. If nil, no sandbox is applied.
+--- @return any result The return value of the executed module.
+function m.load_module(module_path, api)
+    if package.preload[module_path] then
+        return package.preload[module_path]()
+    end
+
+    local chunk
+    local found = false
+
+    for i = 1, #(package.searchers or package.loaders or {}) do
+        local searcher = (package.searchers or package.loaders)[i]
+        local loader_func = searcher(module_path)
+        if type(loader_func) == "function" then
+            chunk = loader_func
+            found = true
+            break
+        end
+    end
+
+    if not found then
+        local file_path = module_path:gsub("%.", "/") .. ".lua"
+        if package.config:sub(1,1) == '\\' then
+            file_path = file_path:gsub("/", "\\")
+        end
+
+        local file = io.open(file_path, "r")
+        if not file then
+            error("Module not found: " .. file_path)
+        end
+
+        local code = file:read("*a")
+        file:close()
+
+        local err
+        chunk, err = loadstring(code)
+        if not chunk then
+            error("Syntax error in " .. file_path .. ": " .. err)
+        end
+    end
+
+    if api then
+        local is_mod = module_path:match("^mods%.") ~= nil
+        local env = create_sandbox_env(api, is_mod)
+        setfenv(chunk, env)
+    end
+    
+    return chunk()
+end
+
 --- Initialize the mod system and load all mods from game/mods
 --- @param engine table Engine instance passed to mods during loading
-function loader.load_mods(engine)
-    print("[Mods] Initializing mod system...")
-    
-    -- Use different path based on whether we're bundled
+function m.load_mods(engine)
     local mods_dir = BUNDLED and "mods" or "game\\mods"
     local mod_folders = scan_directories(mods_dir)
     
@@ -315,28 +316,23 @@ function loader.load_mods(engine)
             for _, file_path in ipairs(lua_files) do
                 local mod = load_mod_file(file_path, mod_name, engine)
                 if mod then
-                    table.insert(loader.loaded, mod)
+                    table.insert(m.loaded, mod)
                 end
             end
         end
     end
     
-    print("[Mods] Successfully loaded " .. #loader.loaded .. " mod(s)")
+    print("[Mods] Successfully loaded " .. #m.loaded .. " mod(s)")
 end
 
 --- Retrieve metadata for all loaded mods
 --- @return table List of loaded mods, each containing name, version, author, and path
-function loader.list()
+function m.list()
     local list = {}
-    for _, mod in ipairs(loader.loaded) do
-        table.insert(list, {
-            name = mod._name,
-            version = mod.version,
-            author = mod.author,
-            path = mod._path
-        })
+    for _, mod in ipairs(m.loaded) do
+        table.insert(list, { name = mod._name, version = mod.version, author = mod.author, path = mod._path })
     end
     return list
 end
 
-return loader
+return m

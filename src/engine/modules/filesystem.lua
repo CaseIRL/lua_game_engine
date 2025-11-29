@@ -47,7 +47,7 @@ local _conf
 if BUNDLED then
     _conf = require("game.config")
 else
-    local loader = require("src.engine.modules.loader")
+    local loader = require("src.engine.core.loader")
     _conf = loader.load_module("game.config")
 end
 
@@ -55,7 +55,7 @@ local external_save = _conf.build and _conf.build.external_save
 
 --- @section Module
 
-local filesystem = {}
+local m = {}
 
 -- Determine save directory based on bundled status and config
 local BASE_DIR
@@ -87,16 +87,16 @@ end
 --- @return boolean success
 local function create_directory(path)
     if ffi.os == "Windows" then
-        return ffi.C._mkdir(path) == 0 or filesystem.exists(path)
+        return ffi.C._mkdir(path) == 0 or m.exists(path)
     else
-        return ffi.C.mkdir(path, tonumber("0755", 8)) == 0 or filesystem.exists(path)
+        return ffi.C.mkdir(path, tonumber("0755", 8)) == 0 or m.exists(path)
     end
 end
 
 --- Check if a file or directory exists
 --- @param path string Path relative to save/ directory
 --- @return boolean exists
-function filesystem.exists(path)
+function m.exists(path)
     local valid, err = validate_path(path)
     if not valid then
         print("Error: " .. err)
@@ -115,13 +115,13 @@ end
 --- Create a directory inside save/ folder
 --- @param path string Directory path relative to save/
 --- @return boolean success, string? error
-function filesystem.create_directory(path)
+function m.create_directory(path)
     local valid, err = validate_path(path)
     if not valid then
         return false, err
     end
 
-    if not filesystem.exists("") then
+    if not m.exists("") then
         create_directory(BASE_DIR:sub(1, -2))
     end
     
@@ -135,7 +135,7 @@ function filesystem.create_directory(path)
     local current = BASE_DIR
     for _, part in ipairs(parts) do
         current = current .. part
-        if not filesystem.exists(current:sub(#BASE_DIR + 1)) then
+        if not m.exists(current:sub(#BASE_DIR + 1)) then
             local success = create_directory(current)
             if not success then
                 return false, "Failed to create directory: " .. current
@@ -152,7 +152,7 @@ end
 --- @param tbl table The table to serialize
 --- @param indent string Current indentation level
 --- @return string Serialized table
-function filesystem.serialize(tbl, indent)
+function m.serialize(tbl, indent)
     indent = indent or ""
     local next_indent = indent .. "    "
     local lines = { "{" }
@@ -168,7 +168,7 @@ function filesystem.serialize(tbl, indent)
         end
 
         if type(v) == "table" then
-            table.insert(lines, string.format("%s%s = %s,", next_indent, key, filesystem.serialize(v, next_indent)))
+            table.insert(lines, string.format("%s%s = %s,", next_indent, key, m.serialize(v, next_indent)))
         elseif type(v) == "string" then
             table.insert(lines, string.format("%s%s = %q,", next_indent, key, v))
         elseif type(v) == "number" or type(v) == "boolean" then
@@ -186,7 +186,7 @@ end
 --- @param path string Path relative to save/ (e.g., "player.lua" or "profiles/player1.lua")
 --- @param data table Data to save
 --- @return boolean success, string? error
-function filesystem.save(path, data)
+function m.save(path, data)
     local valid, err = validate_path(path)
     if not valid then
         return false, err
@@ -196,12 +196,12 @@ function filesystem.save(path, data)
 
     local dir = path:match("(.*/)")
     if dir then
-        local ok, dir_err = filesystem.create_directory(dir)
+        local ok, dir_err = m.create_directory(dir)
         if not ok then
             return false, dir_err
         end
     else
-        filesystem.create_directory("")
+        m.create_directory("")
     end
     
     local file, open_err = io.open(full_path, "w")
@@ -209,7 +209,7 @@ function filesystem.save(path, data)
         return false, "Failed to open file: " .. open_err
     end
     
-    local serialized = "return " .. filesystem.serialize(data)
+    local serialized = "return " .. m.serialize(data)
     file:write(serialized)
     file:close()
     
@@ -220,7 +220,7 @@ end
 --- Load data from a file in save/ directory
 --- @param path string Path relative to save/
 --- @return table? data, string? error
-function filesystem.load(path)
+function m.load(path)
     local valid, err = validate_path(path)
     if not valid then
         return nil, err
@@ -271,7 +271,7 @@ end
 --- Delete a save file
 --- @param path string Path relative to save/
 --- @return boolean success, string? error
-function filesystem.delete(path)
+function m.delete(path)
     local valid, err = validate_path(path)
     if not valid then
         return false, err
@@ -288,4 +288,4 @@ function filesystem.delete(path)
     end
 end
 
-return filesystem
+return m

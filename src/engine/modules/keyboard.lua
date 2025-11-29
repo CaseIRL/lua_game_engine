@@ -41,7 +41,7 @@ local _rl = ffi.load("raylib")
 
 --- @section Module
 
-local keyboard = {
+local m = {
     keymap = {
         -- Letters
         a = 65, b = 66, c = 67, d = 68, e = 69, f = 70, g = 71, h = 72, i = 73, j = 74,
@@ -69,15 +69,15 @@ local keyboard = {
 --- Check if a key is currently held down
 --- @param key string|number Key name (e.g. "w") or raw Raylib keycode
 --- @return boolean down True if the key is currently down
-function keyboard.is_down(key)
-    return _rl.IsKeyDown(keyboard.keymap[key] or key)
+function m.is_down(key)
+    return _rl.IsKeyDown(m.keymap[key] or key)
 end
 
 --- Check if a key was pressed this frame
 --- @param key string|number Key name (e.g. "space") or raw Raylib keycode
 --- @return boolean pressed True if the key was pressed this frame
-function keyboard.is_pressed(key)
-    return _rl.IsKeyPressed(keyboard.keymap[key] or key)
+function m.is_pressed(key)
+    return _rl.IsKeyPressed(m.keymap[key] or key)
 end
 
-return keyboard
+return m

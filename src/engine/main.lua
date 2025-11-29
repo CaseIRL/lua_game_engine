@@ -27,19 +27,22 @@
 
 --- @section Engine Modules
 
-local _loader = require("src.engine.modules.loader")
+local _loader = require("src.engine.core.loader")
 local _conf = _loader.load_module("game.config")
 
 local engine = {
     loader = _loader,
-    window = require("src.engine.modules.window"),
-    scene = require("src.engine.modules.scene"),
-    filesystem = require("src.engine.modules.filesystem"),
-    ui = require("src.engine.ui.init"),
+    log = require("src.engine.core.log"),
+    window = require("src.engine.core.window"),
+    scene = require("src.engine.core.scene"),
+    draw = require("src.engine.core.draw"),
+    ui = require("src.engine.core.ui.init"),
+    runtime = require("src.engine.core.runtime.init")
 }
 
+engine.log.info("Engine initializing...")
+
 local optional_modules = {
-    draw = "src.engine.modules.draw",
     audio = "src.engine.modules.audio",
     keyboard = "src.engine.modules.keyboard",
     mouse = "src.engine.modules.mouse",
@@ -47,12 +50,18 @@ local optional_modules = {
     actions = "src.engine.modules.actions",
     collision = "src.engine.modules.collision",
     network = "src.engine.modules.network",
+    filesystem = "src.engine.modules.filesystem",
+    math = "src.engine.libs.math.init",
+    string = "src.engine.libs.string",
+    table = "src.engine.libs.table",
+    timestamp = "src.engine.libs.timestamp"
 }
 
 --- Load any active optional modules
 for name, path in pairs(optional_modules) do
     if _conf.modules[name] then
         engine[name] = require(path)
+        engine.log.success("Loaded module: "..name)
     end
 end
 
@@ -60,6 +69,7 @@ end
 if _conf.modules.mods then
     engine.hooks = require("src.engine.modules.hooks")
     _loader.load_mods(engine)
+    engine.log.info("Mods system enabled")
 end
 
 --- @section Sandbox
@@ -70,6 +80,8 @@ for name, path in pairs(_conf.scenes) do
     sandboxed_scenes[name] = _loader.load_module("game." .. path, engine)
 end
 
+engine.log.success("Loaded "..#sandboxed_scenes.." scenes")
+
 --- @section Scenes
 
 local scene_name = arg[1] or _conf.default_scene or "test"
@@ -78,12 +90,15 @@ local initial_scene = sandboxed_scenes[scene_name] or _loader.load_module("src.e
 engine.scene.set_scenes(sandboxed_scenes)
 engine.scene.load(initial_scene)
 
+engine.log.info("Scene loaded: "..scene_name)
+
 --- @section Main Code
 
 --- Init the window
 engine.window.init(_conf)
+engine.log.success("Window initialized")
 
---- Main loop; handles basically everything
+--- Main loop
 while not engine.window.should_close() do
     local dt = engine.window.get_dt()
 
@@ -103,6 +118,8 @@ while not engine.window.should_close() do
     engine.window.end_draw()
 end
 
+engine.log.info("Shutting down...")
+
 --- Handle scene unloading
 if engine.scene.current and engine.scene.current.unload then
     engine.scene.current:unload()
@@ -110,3 +127,4 @@ end
 
 --- Handle window closing
 engine.window.close()
+engine.log.success("Engine closed")

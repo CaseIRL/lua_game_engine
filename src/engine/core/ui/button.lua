@@ -28,8 +28,8 @@
 --- @class engine.ui.button
 --- @description Reusable button class.
 
-local _style = require("src.engine.ui.style")
-local _draw = require("src.engine.modules.draw")
+local _style = require("src.engine.core.ui.style")
+local _draw = require("src.engine.core.draw")
 
 local button = {}
 button.__index = button

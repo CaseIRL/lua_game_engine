@@ -122,7 +122,7 @@ local FLAG_MAP = {
 
 --- @section Module
 
-local window = {
+local m = {
     title = "Lua Engine",
     size = { width = 1280, height = 720 },
     fps = { draw = false, target = false },
@@ -133,21 +133,21 @@ local window = {
     running = false
 }
 
---- Initialize the window.
+--- Initialize the window
 --- @param opts table Optional settings
-function window.init(opts)
+function m.init(opts)
     opts = opts or {}
 
-    window.title = (opts.window and opts.window.title) or window.title
-    window.size = (opts.window and opts.window.size) or window.size
-    window.fps = opts.fps or window.fps
-    window.modules = opts.modules or window.modules
-    window.flags = (opts.window and opts.window.flags) or window.flags
-    window.icon = (opts.window and opts.window.icon) or window.icon
+    m.title = (opts.window and opts.window.title) or m.title
+    m.size = (opts.window and opts.window.size) or m.size
+    m.fps = opts.fps or m.fps
+    m.modules = opts.modules or m.modules
+    m.flags = (opts.window and opts.window.flags) or m.flags
+    m.icon = (opts.window and opts.window.icon) or m.icon
 
     local flags = 0
 
-    for name, enabled in pairs(window.flags) do
+    for name, enabled in pairs(m.flags) do
         local flag_constant = FLAG_MAP[string.lower(name)]
         if flag_constant and enabled then
             flags = bit.bor(flags, flag_constant)
@@ -155,53 +155,53 @@ function window.init(opts)
     end
 
     _rl.SetConfigFlags(flags)
-    _rl.InitWindow(window.size.width, window.size.height, window.title)
+    _rl.InitWindow(m.size.width, m.size.height, m.title)
 
-    if window.undecorated then
+    if m.undecorated then
         _rl.SetWindowState(ffi.C.FLAG_WINDOW_UNDECORATED) 
     end
     
     -- Set window icon if provided
-    if window.icon then
-        local icon_image = _rl.LoadImage(window.icon)
+    if m.icon then
+        local icon_image = _rl.LoadImage(m.icon)
         if icon_image.data ~= nil then
             _rl.SetWindowIcon(icon_image)
             _rl.UnloadImage(icon_image)
         else
-            print("Warning: Failed to load icon: " .. window.icon)
+            print("Warning: Failed to load icon: " .. m.icon)
         end
     end
 
-    if window.modules.audio then
+    if m.modules.audio then
         _rl.InitAudioDevice()
     end
 
-    if window.fps.target then
-        _rl.SetTargetFPS(window.fps.target)
+    if m.fps.target then
+        _rl.SetTargetFPS(m.fps.target)
     end
 end
 
 --- Begin a drawing frame.
-function window.begin_draw()
+function m.begin_draw()
     _rl.BeginDrawing()
     _rl.ClearBackground(new_colour(10, 10, 20, 255))
 end
 
 --- End a drawing frame.
-function window.end_draw()
+function m.end_draw()
     _rl.EndDrawing()
 end
 
 --- Check if the window should close.
 --- @return boolean True if the window should close.
-function window.should_close()
+function m.should_close()
     return _rl.WindowShouldClose() ~= 0
 end
 
 --- Toggle a specific window flag
 --- @param flag_name string Name of the flag (e.g., "fullscreen_mode", "topmost")
 --- @param enabled boolean Whether to enable or disable the flag
-function window.toggle_flag(flag_name, enabled)
+function m.toggle_flag(flag_name, enabled)
     local flag_constant = FLAG_MAP[string.lower(flag_name)]
     if not flag_constant then
         print("Warning: Unknown flag '" .. flag_name .. "'")
@@ -210,101 +210,101 @@ function window.toggle_flag(flag_name, enabled)
     
     if enabled then
         _rl.SetWindowState(flag_constant)
-        window.flags[flag_name] = true
+        m.flags[flag_name] = true
     else
         _rl.ClearWindowState(flag_constant)
-        window.flags[flag_name] = false
+        m.flags[flag_name] = false
     end
 end
 
 --- Toggle fullscreen mode (convenience function)
-function window.toggle_fullscreen()
+function m.toggle_fullscreen()
     _rl.ToggleFullscreen()
-    window.flags.fullscreen_mode = not window.flags.fullscreen_mode
+    m.flags.fullscreen_mode = not m.flags.fullscreen_mode
 end
 
 --- Set borderless windowed mode
 --- @param enabled boolean Whether to enable borderless mode
-function window.set_borderless(enabled)
-    window.toggle_flag("borderless_windowed_mode", enabled)
+function m.set_borderless(enabled)
+    m.toggle_flag("borderless_windowed_mode", enabled)
 end
 
 --- Set window to be always on top
 --- @param enabled boolean Whether window should be topmost
-function window.set_topmost(enabled)
-    window.toggle_flag("topmost", enabled)
+function m.set_topmost(enabled)
+    m.toggle_flag("topmost", enabled)
 end
 
 --- Set window resizable state
 --- @param enabled boolean Whether window should be resizable
-function window.set_resizable(enabled)
-    window.toggle_flag("resizable", enabled)
+function m.set_resizable(enabled)
+    m.toggle_flag("resizable", enabled)
 end
 
 --- Set window decorated state (window border/title bar)
 --- @param enabled boolean Whether window should have decorations
-function window.set_decorated(enabled)
-    window.toggle_flag("undecorated", not enabled)
+function m.set_decorated(enabled)
+    m.toggle_flag("undecorated", not enabled)
 end
 
 --- Check if a window flag is currently enabled
 --- @param flag_name string Name of the flag to check
 --- @return boolean Whether the flag is enabled
-function window.is_flag_enabled(flag_name)
-    return window.flags[flag_name] or false
+function m.is_flag_enabled(flag_name)
+    return m.flags[flag_name] or false
 end
 
 --- Get the current window size.
 --- @return number width
 --- @return number height
-function window.get_size()
-    return window.size.width, window.size.height
+function m.get_size()
+    return m.size.width, m.size.height
 end
 
 --- Get the time elapsed since the last frame.
 --- @return number Delta time in seconds.
-function window.get_dt()
+function m.get_dt()
     return _rl.GetFrameTime()
 end
 
 --- Get the current frames per second.
 --- @return number FPS
-function window.get_fps()
+function m.get_fps()
     return _rl.GetFPS()
 end
 
 --- Draw the current FPS at a position.
 --- @param x number X coordinate
 --- @param y number Y coordinate
-function window.draw_fps(x, y)
+function m.draw_fps(x, y)
     _rl.DrawFPS(x, y)
 end
 
 --- Get the window's screen position
 --- @return integer x
 --- @return integer y
-function window.get_position()
+function m.get_position()
     return _rl.GetWindowPositionX(), _rl.GetWindowPositionY()
 end
 
 --- Set the window's screen position
 --- @param x number X position
 --- @param y number Y position
-function window.set_position(x, y)
+function m.set_position(x, y)
     _rl.SetWindowPosition(x, y)
 end
 
 --- Minimize the window
-function window.minimize()
+function m.minimize()
     _rl.MinimizeWindow()
 end
 
 --- Close the window and audio device if enabled.
-function window.close()
-    if window.modules.audio then
+function m.close()
+    if m.modules.audio then
         _rl.CloseAudioDevice()
     end
     _rl.CloseWindow()
 end
 
-return window
+return m

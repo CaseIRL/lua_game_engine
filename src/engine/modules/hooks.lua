@@ -30,45 +30,45 @@
 
 --- @section Module
 
-local hooks = {}
+local m = {}
 
-hooks.registered = {}
-hooks.available = {}
+m.registered = {}
+m.available = {}
 
 --- Register a new hook type
 --- @param name string Name of the hook
 --- @param description string Optional description of what the hook does
-function hooks.register(name, description)
-    hooks.available[name] = description or ""
-    hooks.registered[name] = hooks.registered[name] or {}
+function m.register(name, description)
+    m.available[name] = description or ""
+    m.registered[name] = m.registered[name] or {}
     print("[Hooks] Registered: " .. name)
 end
 
 --- Listen to a hook
 --- @param name string Name of the hook to listen to
 --- @param callback function Function to call when hook fires
-function hooks.listen(name, callback)
+function m.listen(name, callback)
     if type(callback) ~= "function" then
         error("Hook callback must be a function")
     end
 
-    if not hooks.registered[name] then
-        hooks.registered[name] = {}
+    if not m.registered[name] then
+        m.registered[name] = {}
     end
     
-    table.insert(hooks.registered[name], callback)
+    table.insert(m.registered[name], callback)
     print("[Hooks] Listener added to: " .. name)
 end
 
 --- Fire a hook
 --- @param name string Name of the hook to fire
 --- @param data table Data to pass to listeners
-function hooks.fire(name, data)
-    if not hooks.registered[name] then
+function m.fire(name, data)
+    if not m.registered[name] then
         return
     end
     
-    for _, callback in ipairs(hooks.registered[name]) do
+    for _, callback in ipairs(m.registered[name]) do
         local success, result = pcall(callback, data)
         if not success then
             print("[Hooks] Error in hook '" .. name .. "': " .. tostring(result))
@@ -79,14 +79,14 @@ end
 --- Remove a specific listener
 --- @param name string Name of the hook
 --- @param callback function The callback to remove
-function hooks.unlisten(name, callback)
-    if not hooks.registered[name] then
+function m.unlisten(name, callback)
+    if not m.registered[name] then
         return
     end
     
-    for i, cb in ipairs(hooks.registered[name]) do
+    for i, cb in ipairs(m.registered[name]) do
         if cb == callback then
-            table.remove(hooks.registered[name], i)
+            table.remove(m.registered[name], i)
             print("[Hooks] Listener removed from: " .. name)
             return
         end
@@ -95,27 +95,27 @@ end
 
 --- Clear all listeners for a hook
 --- @param name string Name of the hook to clear
-function hooks.clear(name)
-    if hooks.registered[name] then
-        hooks.registered[name] = {}
+function m.clear(name)
+    if m.registered[name] then
+        m.registered[name] = {}
         print("[Hooks] Cleared all listeners for: " .. name)
     end
 end
 
 --- Clear all hooks
-function hooks.clear_all()
-    hooks.registered = {}
+function m.clear_all()
+    m.registered = {}
     print("[Hooks] Cleared all hooks")
 end
 
 --- Get list of registered hooks
 --- @return table List of hook names
-function hooks.list()
+function m.list()
     local list = {}
-    for name, _ in pairs(hooks.available) do
+    for name, _ in pairs(m.available) do
         table.insert(list, name)
     end
     return list
 end
 
-return hooks
+return m

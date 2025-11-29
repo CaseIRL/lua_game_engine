@@ -28,10 +28,10 @@
 --- @module engine.ui.style
 --- @description Hold static style values for use throughout engine.
 
-local style = {}
+local m = {}
 
-style.themes = {}
-style.themes.default = {
+m.themes = {}
+m.themes.default = {
     -- Fonts *(not added yet will add a font loader at some point)*
     header_font = "Kanit",
     text_font = "Roboto",
@@ -84,33 +84,33 @@ style.themes.default = {
 }
 
 -- Current active theme (defaults to default theme)
-style.current = style.themes.default
+m.current = m.themes.default
 
 --- Set the active theme
 --- @param theme_name string The name of the theme to activate
 --- @return boolean success Returns true if theme was found and set
-function style.set_theme(theme_name)
-    if style.themes[theme_name] then
-        style.current = style.themes[theme_name]
+function m.set_theme(theme_name)
+    if m.themes[theme_name] then
+        m.current = m.themes[theme_name]
         return true
     else
         print("Warning: Theme '" .. theme_name .. "' not found, using default")
-        style.current = style.themes.default
+        m.current = m.themes.default
         return false
     end
 end
 
 --- Get the current theme
 --- @return table The current active theme
-function style.get_theme()
-    return style.current
+function m.get_theme()
+    return m.current
 end
 
 --- Get a specific value from the current theme with fallback
 --- @param key string The style property to retrieve
 --- @return any The value, or nil if not found
-function style.get(key)
-    return style.current[key] or style.themes.default[key]
+function m.get(key)
+    return m.current[key] or m.themes.default[key]
 end
 
-return style
+return m

@@ -51,33 +51,33 @@ local _rl = ffi.load("raylib")
 
 --- @section Module
 
-local mouse = {}
+local m = {}
 
 --- Get the current mouse position
 --- @return number x Current cursor X position
 --- @return number y Current cursor Y position
-function mouse.get_pos()
+function m.get_pos()
     return _rl.GetMouseX(), _rl.GetMouseY()
 end
 
 --- Check if a mouse button was pressed this frame
 --- @param button number Mouse button index (e.g. 0 = left, 1 = right)
 --- @return boolean pressed True if the button was pressed this frame
-function mouse.is_pressed(button)
+function m.is_pressed(button)
     return _rl.IsMouseButtonPressed(button)
 end
 
 --- Check if a mouse button is currently held down
 --- @param button number Mouse button index (0 = left, 1 = right)
 --- @return boolean down True if the button is being held down
-function mouse.is_down(button)
+function m.is_down(button)
     return _rl.IsMouseButtonDown(button)
 end
 
 --- Get mouse movement delta since last frame
 --- @return number dx Horizontal mouse movement
 --- @return number dy Vertical mouse movement
-function mouse.get_delta()
+function m.get_delta()
     local v = _rl.GetMouseDelta()
     return v.x, v.y
 end
@@ -85,28 +85,28 @@ end
 --- Set the mouse cursor position
 --- @param x number New cursor X position
 --- @param y number New cursor Y position
-function mouse.set_pos(x, y)
+function m.set_pos(x, y)
     _rl.SetMousePosition(x, y)
 end
 
 --- Show the mouse cursor
-function mouse.show()
+function m.show()
     _rl.ShowCursor()
 end
 
 --- Hide the mouse cursor
-function mouse.hide()
+function m.hide()
     _rl.HideCursor()
 end
 
 --- Lock the mouse cursor
-function mouse.lock()
+function m.lock()
     _rl.DisableCursor()
 end
 
 --- Unlock the mouse cursor
-function mouse.unlock()
+function m.unlock()
     _rl.EnableCursor()
 end
 
-return mouse
+return m

@@ -86,7 +86,6 @@ return {
 
     modules = {
         audio = true, -- Enables raylibs InitAudioDevice()
-        draw = true, -- Enables `draw` functions
         image = true, -- Enables `image` functions
         keyboard = true, -- Enables `keyboard` input functions
         mouse = true, -- Enables `mouse` input functions
@@ -95,7 +94,11 @@ return {
         ui = true, -- Enables ui module; handles pretty much the same as any gui lib
         mods = true, -- Enables mod support; loads all mods and allows access to `engine.hooks`
         filesystem = true, -- Basic file saving and loading; useful for single player persistance
-        network = true, -- Enable networking; requires a basic relay server
+        network = true, -- Enables networking; requires a basic relay server; make sure to enter network details above
+        math = true, -- Enables maths library functions
+        string = true, -- Enables string library functions
+        table = true, -- Enables table library functions
+        timestamp = true -- Enabled timestamp library functions
     },
 
     --- @section Game Scenes
@@ -118,6 +121,9 @@ return {
         test_filesystem = "src.test.scenes.test_filesystem",
         test_network1 = "src.test.scenes.test_network1",
         test_network2 = "src.test.scenes.test_network2",
-        test_runner = "src.test.scenes.test_runner"
+        test_runner = "src.test.scenes.test_runner",
+        test_maths = "src.test.scenes.test_maths",
+        test_log = "src.test.scenes.test_log",
+        test_runtime = "src.test.scenes.test_runtime"
     }
 }

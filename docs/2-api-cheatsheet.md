@@ -243,6 +243,336 @@ engine.network.cleanup()                        -- Clean up winsock resources
 
 ---
 
+# Maths
+
+Mathematics library for games: core math, easing, geometry, matrices, probability, statistics, and vectors.
+
+## Core Math
+```lua
+engine.math.round(number, decimals)           -- Round number to N decimal places
+engine.math.clamp(value, min, max)            -- Clamp value between min and max
+engine.math.lerp(a, b, t)                     -- Linear interpolation (t: 0.0-1.0)
+engine.math.deg_to_rad(degrees)               -- Convert degrees to radians
+engine.math.rad_to_deg(radians)               -- Convert radians to degrees
+engine.math.factorial(n)                      -- Calculate factorial of n
+```
+
+## Easing Functions
+
+Commonly used animation easing curves. Parameter `t` should be 0.0-1.0.
+
+```lua
+engine.math.linear(t)                         -- Linear (no curve)
+engine.math.in_quad(t)                        -- Quadratic ease-in
+engine.math.out_quad(t)                       -- Quadratic ease-out
+engine.math.in_out_quad(t)                    -- Quadratic ease-in-out
+engine.math.in_cubic(t)                       -- Cubic ease-in
+engine.math.out_cubic(t)                      -- Cubic ease-out
+engine.math.in_out_cubic(t)                   -- Cubic ease-in-out
+engine.math.out_elastic(t)                    -- Elastic ease-out
+```
+
+## Geometry 2D
+```lua
+engine.math.distance_2d(p1, p2)                                                -- Distance between two 2D points
+engine.math.angle_between_points(p1, p2)                                       -- Angle between two points (degrees)
+engine.math.circle_circumference(radius)                                       -- Circumference of circle
+engine.math.circle_area(radius)                                                -- Area of circle
+engine.math.triangle_area(p1, p2, p3)                                          -- Area of triangle from 3 vertices
+engine.math.is_point_in_rect(point, rect)                                      -- Is point inside rectangle?
+engine.math.is_point_in_circle(point, center, radius)                          -- Is point inside circle?
+engine.math.is_point_on_line_segment(point, start, end_point, tolerance?)      -- Is point on line segment?
+engine.math.do_circles_intersect(c1, r1, c2, r2)                               -- Do two circles intersect?
+engine.math.do_lines_intersect(l1_start, l1_end, l2_start, l2_end)             -- Do two lines intersect?
+engine.math.line_intersects_circle(start, end_point, center, radius)           -- Does line intersect circle?
+engine.math.does_rect_intersect_line(rect, start, end_point)                   -- Does rectangle intersect line?
+engine.math.closest_point_on_line_segment(point, start, end_point)             -- Closest point on line to point
+engine.math.project_point_on_line(point, start, end_point)                     -- Project point onto line
+engine.math.calculate_slope(p1, p2)                                            -- Slope of line (nil if vertical)
+engine.math.is_point_in_convex_polygon(point, polygon)                         -- Is point in convex polygon?
+engine.math.rotate_point_around_point_2d(point, pivot, degrees)                -- Rotate point around pivot
+```
+
+**Format notes:**
+- `point` = `{ x, y }`
+- `rect` = `{ x, y, width, height }`
+- `polygon` = `[{ x, y }, { x, y }, ...]`
+
+## Geometry 3D
+```lua
+engine.math.distance_3d(p1, p2)                                            -- Distance between two 3D points
+engine.math.midpoint(p1, p2)                                               -- Midpoint between two 3D points
+engine.math.angle_between_3_points(p1, p2, p3)                             -- Angle at p2 between p1 and p3 (degrees)
+engine.math.triangle_area_3d(p1, p2, p3)                                   -- Area of triangle in 3D space
+engine.math.is_point_in_box(point, box)                                    -- Is point inside 3D box?
+engine.math.is_point_in_sphere(point, center, radius)                      -- Is point inside sphere?
+engine.math.do_spheres_intersect(c1, r1, c2, r2)                           -- Do two spheres intersect?
+engine.math.distance_point_to_plane(point, plane_point, plane_normal)      -- Distance to plane
+```
+
+**Format notes:**
+- `point` = `{ x, y, z }`
+- `box` = `{ x, y, z, width, height, depth }`
+- `plane_normal` must be normalized
+
+## Matrix 4x4 (Transformations)
+```lua
+-- Constructors
+engine.math.mat4.translate(x, y, z)                                    -- Translation matrix
+engine.math.mat4.rotate_euler(rx, ry, rz)                              -- Rotation from Euler angles (degrees)
+engine.math.mat4.rotate_axis(axis, angle)                              -- Rotation around axis (angle in degrees)
+engine.math.mat4.scale(sx, sy, sz)                                     -- Scale matrix
+engine.math.mat4.perspective(fov, aspect, near, far)                   -- Perspective projection
+engine.math.mat4.orthographic(left, right, bottom, top, near, far)     -- Orthographic projection
+engine.math.mat4.look_at(eye, target, up)                              -- Look-at matrix (camera)
+
+-- Methods
+local result = matrix1:multiply(matrix2)        -- Multiply with another matrix
+local result = matrix1 * matrix2                -- Multiply (using * operator)
+local vector = matrix:multiply_vec3(vec)        -- Transform 3D vector
+local transposed = matrix:transpose()           -- Transpose matrix
+local inverted = matrix:invert()                -- Invert matrix (returns nil if singular)
+local pos = matrix:get_translation()            -- Extract translation from matrix
+local scale = matrix:get_scale()                -- Extract scale from matrix
+```
+
+**Format notes:**
+- `axis` = `{ x, y, z }` (should be normalized)
+- Returns `nil` on operations that fail (e.g., inverting singular matrices)
+
+## Probability & Random
+```lua
+engine.math.set_seed(seed)                    -- Set random seed for reproducibility
+engine.math.random_between(min, max)          -- Random float in range
+engine.math.random_int(min, max)              -- Random integer (inclusive)
+engine.math.chance(probability)               -- True if event with probability (0.0-1.0) occurs
+engine.math.percent_chance(percentage)        -- True if event with percentage (0-100) occurs
+engine.math.random_choice(table)              -- Pick random element from table
+engine.math.weighted_choice(table)            -- Pick element from {option=weight} table
+engine.math.shuffle(table)                    -- Shuffle table in-place (Fisher-Yates)
+engine.math.random_normal(mean?, stddev?)     -- Random from normal distribution
+engine.math.random_exponential(lambda)        -- Random from exponential distribution
+engine.math.random_uniform(min, max)          -- Random from uniform distribution
+```
+
+## Statistics
+```lua
+engine.math.mean(numbers)                                  -- Average of numbers
+engine.math.median(numbers)                                -- Middle value of numbers
+engine.math.mode(numbers)                                  -- Most common value (nil if no clear mode)
+engine.math.variance(numbers, population?)                 -- Variance (sample by default)
+engine.math.standard_deviation(numbers, population?)       -- Standard deviation
+engine.math.range(numbers)                                 -- Max - Min
+engine.math.min(numbers)                                   -- Minimum value
+engine.math.max(numbers)                                   -- Maximum value
+engine.math.sum(numbers)                                   -- Sum of all values
+engine.math.quantile(numbers, q)                           -- Quantile at position q (0.0-1.0)
+engine.math.linear_regression(points)                      -- Linear regression, returns {slope, intercept, r_squared}
+engine.math.correlation(x, y)                              -- Pearson correlation (-1 to 1)
+engine.math.covariance(x, y, population?)                  -- Covariance between datasets
+```
+
+**Format notes:**
+- `numbers` = `[1, 2, 3, ...]` array
+- `points` = `[{x=1, y=2}, {x=3, y=4}, ...]` for regression
+
+## Vector 3D
+```lua
+-- Constructors
+local v = engine.math.vec3(x, y, z)           -- Create vector
+local v = engine.math.vec3()                  -- Create zero vector (0, 0, 0)
+
+-- Methods (can use operators)
+local v3 = v1:add(v2)                          -- Add vectors (or v1 + v2)
+local v3 = v1:sub(v2)                          -- Subtract vectors (or v1 - v2)
+local v3 = v1:scale(scalar)                    -- Scale vector (or v1 * scalar)
+local v3 = v1 * 2                              -- Scale using * operator
+local v3 = v1 / 2                              -- Divide by scalar
+local dot = v1:dot(v2)                         -- Dot product
+local v3 = v1:cross(v2)                        -- Cross product
+local length = v1:length()                     -- Magnitude
+local length_sq = v1:length_squared()          -- Magnitude squared (faster)
+local v2 = v1:normalize()                      -- Unit vector
+local is_zero = v1:is_zero()                   -- Is vector effectively zero?
+local distance = v1:distance(v2)               -- Distance to another vector
+local distance_sq = v1:distance_squared(v2)    -- Squared distance (faster)
+local v3 = v1:lerp(v2, t)                      -- Linear interpolation (0.0-1.0)
+local str = tostring(v1)                       -- Vector formatted as "vec3(x, y, z)"
+```
+
+---
+
+# Runtime 
+
+Game runtime tools for managing state, events, timers, cooldowns, and deterministic randomness.
+
+## Timers
+
+Schedule delayed and repeating functions.
+
+```lua
+local id = engine.runtime.timers.set_timer(delay, callback)                 -- Run callback once after delay (seconds)
+local id = engine.runtime.timers.repeat_timer(interval, callback, count)    -- Repeat callback every interval, N times (-1 = infinite)
+engine.runtime.timers.cancel_timer(id)                                      -- Cancel timer by ID
+engine.runtime.timers.clear_all_timers()                                    -- Cancel all active timers
+engine.runtime.timers.update_timer(dt)                                      -- Update timers (call once per frame)
+```
+
+**Usage in scene:**
+```lua
+function scene:update(dt)
+    engine.runtime.timers.update_timer(dt)
+    -- ... rest of update
+end
+```
+
+## Cooldowns
+
+Track cooldowns for abilities, actions, or any time-based restrictions.
+
+```lua
+engine.runtime.cooldowns.add_cooldown(id, type, duration)                       -- Start cooldown (duration in seconds)
+local is_active = engine.runtime.cooldowns.check_cooldown(id, type)             -- Is cooldown still active?
+local remaining = engine.runtime.cooldowns.cooldown_time_remaining(id, type)    -- Seconds left (0 if expired)
+engine.runtime.cooldowns.clear_cooldown(id, type)                               -- Manually clear specific cooldown
+engine.runtime.cooldowns.clear_all_cooldowns(id)                                -- Clear all cooldowns for an id
+engine.runtime.cooldowns.clear_expired_cooldowns()                              -- Cleanup expired (call periodically)
+```
+
+## State Manager
+
+Named state scopes with persistent key-value storage.
+
+```lua
+engine.runtime.state.use_state(name)           -- Switch to named state (creates if missing)
+engine.runtime.state.current_state()           -- Returns current state name
+engine.runtime.state.set_state(key, value, scope?) -- Set value in state
+engine.runtime.state.get_state(key, fallback?, scope?) -- Get value from state
+engine.runtime.state.clear_state(key, scope?)  -- Delete single key from state
+engine.runtime.state.clear_all(scope?)         -- Clear all keys from state
+engine.runtime.state.dump_state(scope?)        -- Returns entire state table
+engine.runtime.state.delete_state(name)        -- Delete entire named state
+engine.runtime.state.list_states()             -- Returns array of all state names
+engine.runtime.state.with_state(scope, fn)     -- Run function in another state scope temporarily
+engine.runtime.state.data                      -- Direct proxy access: state.data.key = value
+```
+
+## Callbacks
+
+Lightweight event/callback registration system.
+
+```lua
+engine.runtime.callbacks.register_callback(name, fn, overwrite?) -- Register callback
+engine.runtime.callbacks.trigger_callback(name, ...)  -- Call callback with args, returns result or nil
+engine.runtime.callbacks.unregister_callback(name)    -- Remove callback
+engine.runtime.callbacks.callback_exists(name)        -- Does callback exist?
+engine.runtime.callbacks.get_each_callback()          -- Iterate callbacks (returns iterator)
+```
+
+## RNG (Deterministic Random)
+
+Deterministic random number generator using Linear Congruential Generator. Useful for replays and seeded gameplay.
+
+```lua
+engine.runtime.rng.set_rng_seed(seed)          -- Set RNG seed for reproducibility
+engine.runtime.rng.get_rng_seed()              -- Get current seed
+engine.runtime.rng.random_rng()                -- Random float 0.0-1.0
+engine.runtime.rng.get_rng_state()             -- Get internal RNG state (for snapshots)
+engine.runtime.rng.set_rng_state(state)        -- Restore RNG to previous state
+```
+
+---
+
+# Logging
+
+Colour coded logger with history buffer and level filtering.
+
+```lua
+engine.log.debug(msg, data?)                   -- Log debug message
+engine.log.info(msg, data?)                    -- Log info message
+engine.log.success(msg, data?)                 -- Log success message (green)
+engine.log.warn(msg, data?)                    -- Log warning message (yellow)
+engine.log.error(msg, data?)                   -- Log error message (red)
+engine.log.fatal(msg, data?)                   -- Log fatal error and exit
+engine.log.print(level, msg, data?)            -- Log with explicit level
+engine.log.set_level(level)                    -- Set minimum log level to show
+engine.log.use_colour(enabled?)                -- Force colors on/off (nil = auto-detect)
+engine.log.get_history()                       -- Returns array of all logged messages
+```
+
+**Log levels:** `"debug"`, `"info"`, `"success"`, `"warn"`, `"error"`, `"fatal"`
+
+---
+
+# Strings
+
+Text manipulation utilities beyond standard Lua string functions.
+
+```lua
+engine.string.capitalize(str)                           -- Title case each word
+engine.string.split(str, delimiter)                     -- Split into array by delimiter
+engine.string.trim(str)                                 -- Remove leading/trailing whitespace
+engine.string.random_string(length)                     -- Generate random alphanumeric string
+engine.string.starts_with(str, prefix)                  -- Check if string starts with prefix
+engine.string.ends_with(str, suffix)                    -- Check if string ends with suffix
+engine.string.replace(str, old, new)                    -- Replace first occurrence
+engine.string.replace_all(str, old, new)                -- Replace all occurrences
+engine.string.reverse(str)                              -- Reverse string
+engine.string.repeat_string(str, count)                 -- Repeat string N times
+engine.string.truncate(str, max_length, suffix?)        -- Shorten with suffix (default: "...")
+engine.string.is_empty(str)                             -- Is string empty or whitespace?
+engine.string.lowercase(str)                            -- Convert to lowercase
+engine.string.uppercase(str)                            -- Convert to uppercase
+engine.string.count(str, substring)                     -- Count substring occurrences
+engine.string.pad_left(str, length, char?)              -- Pad left side (default: space)
+engine.string.pad_right(str, length, char?)             -- Pad right side (default: space)
+engine.string.contains(str, substring)                  -- Check if contains substring
+engine.string.between(str, start_delim, end_delim)      -- Extract between delimiters
+```
+
+---
+
+# Tables
+
+Table utilities for debugging, searching, and deep operations.
+
+```lua
+engine.table.print(tbl, indent?)               -- Debug print nested table with indentation
+engine.table.contains(tbl, value)              -- Check if table contains value (searches nested tables)
+engine.table.deep_copy(tbl)                    -- Create deep recursive copy with metatables preserved
+engine.table.deep_compare(t1, t2)              -- Check deep structural equality between two tables
+```
+
+---
+
+# Timestamps
+
+Date and time utilities for working with UNIX timestamps and date formatting.
+
+```lua
+engine.timestamp.now()                         -- Get current UNIX timestamp
+engine.timestamp.convert_timestamp(ts?)        -- Convert timestamp to {date, time, both}
+engine.timestamp.now_formatted()               -- Get current date/time as strings
+engine.timestamp.format_timestamp(ts, format)  -- Format timestamp with custom format
+engine.timestamp.parse_date(date_str, time_str?) -- Parse "YYYY-MM-DD" to timestamp
+engine.timestamp.date_difference(start, end)   -- Days between two dates
+engine.timestamp.timestamp_difference(ts1, ts2) -- Seconds between timestamps
+engine.timestamp.add_days_to_date(date, days)  -- Add days to date string
+engine.timestamp.add_seconds(ts, seconds)      -- Add seconds to timestamp
+engine.timestamp.add_minutes(ts, minutes)      -- Add minutes to timestamp
+engine.timestamp.add_hours(ts, hours)          -- Add hours to timestamp
+engine.timestamp.day_of_week(ts?)              -- Get day of week (1=Sun, 7=Sat)
+engine.timestamp.day_name(ts?)                 -- Get day name (e.g., "Monday")
+engine.timestamp.month_name(ts?)               -- Get month name (e.g., "January")
+engine.timestamp.is_leap_year(year)            -- Is year a leap year?
+engine.timestamp.days_in_month(year, month)    -- Days in given month
+engine.timestamp.is_past(ts)                   -- Is timestamp in the past?
+engine.timestamp.is_future(ts)                 -- Is timestamp in the future?
+engine.timestamp.format_duration(seconds)      -- Format seconds to "Xh Ym Zs"
+```
+
+---
+
 # Next Steps
 
 - [creating scenes](/docs/3-creating-scenes.md) - Scene patterns & examples

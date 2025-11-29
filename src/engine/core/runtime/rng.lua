@@ -25,12 +25,49 @@
     SOFTWARE.
 ]]
 
---- @module engine.ui.init
---- @description Handles main entry for ui modules.
+--- @module runtime.rng
+--- @description Deterministic RNG wrapper using a Linear Congruential Generator (LCG).
 
-local ui = {}
+local m = {}
 
-ui.style = require("src.engine.ui.style")
-ui.button = require("src.engine.ui.button")
+-- LCG state
+local seed = os.time()
+local state = seed
 
-return ui
+local MODULUS = 2^31
+local MULTIPLIER = 1103515245
+local INCREMENT = 12345
+
+--- Sets the seed for RNG.
+--- @param s number: Seed to use (default: current time).
+function m.set_rng_seed(s)
+    seed = s or os.time()
+    state = seed
+end
+
+--- Gets the current seed value.
+--- @return number: The last set seed value.
+function m.get_rng_seed()
+    return seed
+end
+
+--- Returns a raw float between 0.0 and 1.0.
+--- @return number: Random float between 0.0 and 1.0.
+function m.random_rng()
+    state = (MULTIPLIER * state + INCREMENT) % MODULUS
+    return state / MODULUS
+end
+
+--- Gets the internal RNG state for snapshot/rewind functionality.
+--- @return number: Current internal RNG state.
+function m.get_rng_state()
+    return state
+end
+
+--- Restores a previously saved RNG state.
+--- @param s number: State value to restore.
+function m.set_rng_state(s)
+    state = s
+end
+
+return m
